@@ -42,22 +42,36 @@ at (x:xs) n = if n == 0 then x else at xs (n-1)
 at' :: [Int] -> Int -> Int
 -- The | denotes a so called "guard" that specifies an additional condition
 -- for the pattern match
-at' xs     n | n < 0 = error "E01.A2: negative index"
+at' _      n | n < 0 = error "E01.A2: negative index"
 at' []     _         = error "E01.A2: index too large"
 at' (x:_)  0         = x
 at' (_:xs) n         = at' xs (n-1)
 
 -- Note:
 -- The Haskell Prelude already includes the operator (!!) which does the same
--- as at for any type of list (not just [Int])
+-- as at for any type of list (not just [Int]), e.g. [1, 2, 3] !! 1 = 2
 
 -- (c):
-contains :: [Int] -> Int -> Bool
-
 dup :: [Int] -> [Int] -> [Int]
 dup []     _  = []
 dup _      [] = []
-dup (x:xs) ys = if contains ys x then x:dup xs ys
+dup (x:xs) ys = if contains x ys then x:dup xs ys
                                  else dup xs ys
 
+-- Note: The Haskell Prelude obviously already includes a function that does
+-- the same as contains called elem.
+
+
+contains :: Int -> [Int] -> Bool
+contains _ []     = False
+--contains x (y:ys) = if x == y then True else contains x ys
+-- if-then-else is valid but unnecessary as the result of then and else is
+-- already Bool
+contains x (y:ys) = x == y || contains x ys
+
+-- Advanced:
+-- We can use the any function which is True if any item evaluates to True
+-- under a given predicate
+contains' :: Int -> [Int] -> Bool
+contains' x ys = any (==x) ys
 

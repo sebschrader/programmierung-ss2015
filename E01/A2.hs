@@ -19,10 +19,15 @@ f2 xs = reverse $ nonzero xs
 f3 :: [Int] -> [Int]
 f3 = reverse . nonzero
 
+-- Explicit
 nonzero :: [Int] -> [Int]
 nonzero [] = []
 nonzero (x:xs) | x > 0     = x:nonzero xs
                | otherwise = nonzero xs
+
+-- Better: List comprehension
+nonzero' :: [Int] -> [Int]
+nonzero' xs = [x | x<-xs, x>0]
 
 -- Advanced: Higher order function filter:
 -- Filters a list with a predicate (function p from a to Bool)
@@ -32,6 +37,6 @@ filter _ []    = []
 filter p (x:xs) | pred x    = x : filter p xs
                 | otherwise = filter p xs
 -}
-nonzero1 :: [Int] -> [Int]
-nonzero1 = filter (> 0)
+nonzero'' :: [Int] -> [Int]
+nonzero'' = filter (> 0)
 
