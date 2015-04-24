@@ -120,7 +120,7 @@ gen = gen' 1
 gen'' :: [Int]
 gen'' = [1,2..]
 
--- einstellige Funktionen
+-- nullstellige Funktionen -> keine Argumente
 pii :: Float
 pii = 3.14
 
