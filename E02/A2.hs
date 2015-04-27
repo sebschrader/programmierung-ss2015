@@ -1,6 +1,7 @@
 module E02.A2
 ( pack
 , pack'
+, pack''
 , encode
 , encode'
 , decode
@@ -55,6 +56,16 @@ takeEqual c xs'@(x:xs)
 pack' :: [Char] -> [[Char]]
 pack' []         = []
 pack' xs'@(x:xs) = takeWhile (==x) xs':pack' (dropWhile (== x) xs)
+
+
+-- Advanced: span combines takeWhile and dropWhile
+-- http://hackage.haskell.org/package/base-4.8.0.0/docs/Prelude.html#v:span
+-- See also break:
+-- http://hackage.haskell.org/package/base-4.8.0.0/docs/Prelude.html#v:break
+pack'' :: [Char] -> [[Char]]
+pack'' []         = []
+pack'' xs'@(x:xs) = ys:pack'' zs
+    where (ys, zs) = span (==x) xs'
 
 
 -- (b)
