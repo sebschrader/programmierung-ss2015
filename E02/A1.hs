@@ -1,29 +1,30 @@
+-- We can declare the names a module exports
 module A1
-( compare'
+( compare
+, compare'
 , compare''
-, compare'''
 , merge
 , merge'
 ) where
 
 -- a
 -- intuitive idea with patterns
-compare' :: [Int] -> [Int] -> Bool
-compare' [] [] = True
-compare' [] _  = False
-compare' _ []  = False
-compare' (x:xs) (y:ys) = (x == y) &&  (compare' xs ys)
+compare :: [Int] -> [Int] -> Bool
+compare [] [] = True
+compare [] _  = False
+compare _ []  = False
+compare (x:xs) (y:ys) = (x == y) &&  (compare' xs ys)
 
 -- additional built-in functions: length, foldr, zipWith
-compare'' :: [Int] -> [Int] -> Bool
-compare'' xs ys =  (length xs) == (length  ys) &&
+compare' :: [Int] -> [Int] -> Bool
+compare' xs ys =  (length xs) == (length  ys) &&
                     (foldr (&&) True $ zipWith (==) xs ys)
 
 -- additional built-in functions: and, foldr, zipWith, length
 -- the foldr (&&) True could also exchanged by and
 -- for usage with infint list we have to switch the order of evaluation
-compare''' :: [Int] -> [Int] -> Bool
-compare''' xs ys =  (and $ zipWith (==) xs ys) && length xs == length  ys
+compare'' :: [Int] -> [Int] -> Bool
+compare'' xs ys =  (and $ zipWith (==) xs ys) && length xs == length  ys
 
 -- (b)
 merge :: [Int] -> [Int] -> [Int]
