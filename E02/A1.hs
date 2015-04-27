@@ -25,22 +25,19 @@ compare'' xs ys =  (length xs) == (length  ys) &&
 compare''' :: [Int] -> [Int] -> Bool
 compare''' xs ys =  (and $ zipWith (==) xs ys) && length xs == length  ys
 
--- b
--- intuitive idea with pattern matching and guards
+-- (b)
 merge :: [Int] -> [Int] -> [Int]
 merge xs [] = xs
 merge [] ys = ys
 merge (x:xs) (y:ys)
-       | x < y  = x : merge xs (y:ys)
-       | x >= y = y : merge (y:ys) xs
-       | otherwise = error ("This should not happen! xs:"
-                    ++ (show xs) ++ "ys:" ++ (show ys))
+    | x < y     = x : merge xs     (y:ys)
+    | otherwise = y : merge (x:xs) ys
 
--- additional built-in functions: min
--- idea of taking to compare allways the first elements of booth lists
--- and take the smaller one.
 merge' :: [Int] -> [Int] -> [Int]
-merge' [] ys = ys
 merge' xs [] = xs
-merge' (x:xs) (y:ys) = min x y : merge' xs ys
+merge' [] ys = ys
+-- We can assign a matched subpattern a name with an "as-pattern":
+merge' xs'@(x:xs) ys'@(y:ys)
+    | x < y     = x : merge xs  ys'
+    | otherwise = y : merge xs' ys
 
