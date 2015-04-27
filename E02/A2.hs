@@ -1,7 +1,6 @@
-module A2
+module E02.A2
 ( pack
 , pack'
-, pack''
 , encode
 , encode'
 , decode
@@ -22,43 +21,43 @@ example2 = [(2, 'a'), (3, 'b'), (1, 'a')]
 example3 :: [Int]
 example3 = [1,2,3,4]
 
---a
----- additional built-in functions: reverse
--- intuitive idea of having a help function f
--- ((y:ys):yss) means that we take the first element (y:ys) a [Char]
--- and the restlist yss a [[Char]] and compare the first element
--- with our first Element x from our List (x:xs) [Char].
--- But you have to imagine that we reverse it by this step.
--- So we have to reverse it at the end again.
+-- (a)
+-- This problem is somewhat difficult to solve as we have to apply a concept
+-- that we never used before: multiple result values and modifying result
+-- values from a recursive function application.
+-- We need a helper function takeEqual that splits the longest prefix of
+-- recurring characters off of a list and gives us both the longest prefix and
+-- the remaining list.
+-- Using where we can assign through pattern matching both parts of the result
+-- of the helper function to variables and use them for the actual result of
+-- the result function.
 pack :: [Char] -> [[Char]]
-pack xs = reverse (f xs [])
-    where f :: [Char] -> [[Char]] -> [[Char]]
-          f [] ys = ys
-          f (x:xs) [] = f xs [[x]]
-          f (x:xs) ((y:ys):yss) = if x == y then f xs ((x:y:ys):yss)
-                                            else f xs ([x]:(y:ys):yss)
--- additional built-in functions: foldr
--- previos we did something like foldl
--- to not reverse the list afterwards we now
--- take foldr. It carries the list from right to left and
--- so afterwards its in the right order.
+pack ""         = []
+pack xs'@(x:xs) = ys:pack zs
+    where (ys, zs) = takeEqual x xs'
+
+takeEqual :: Char -> [Char] -> ([Char], [Char])
+takeEqual _ ""     = ("","")
+takeEqual c xs'@(x:xs)
+    -- We can do something with let as we have done above with where.
+    -- See https://wiki.haskell.org/Let_vs._Where for a discussion of both of
+    -- these constructs.
+    | x == c    = let (ys, zs) = takeEqual c xs
+                  in (x:ys, zs)
+    | otherwise = ("", xs')
+
+-- Advanced: Very elegant solution using takeWhile and dropWhile
+-- takeWhile: take elements from a list as long as a predicate is satisfied
+-- http://hackage.haskell.org/package/base-4.8.0.0/docs/Prelude.html#v:takeWhile
+-- dropWhile: drop elements from a list as long as a predicate is satisfied
+-- http://hackage.haskell.org/package/base-4.8.0.0/docs/Prelude.html#v:dropWhile
+-- We partially apply the equality function (==)
 pack' :: [Char] -> [[Char]]
-pack' xs = foldr f [] xs
-    where f :: Char -> [[Char]] -> [[Char]]
-          f x [] = [[x]]
-          f x ((y:ys):yss)
-              | x == y = ((x:y:ys):yss)
-              | otherwise = ([x]:(y:ys):yss)
-
--- additional built-in functions: takeWhile, dropWhile
--- or simply using in build function takeWhile and dropWhile,
--- and using partiell applied function (==)
-pack'' :: [Char] -> [[Char]]
-pack'' [] = []
-pack'' (x:xs) = (takeWhile (==x) (x:xs)) : (pack'' (dropWhile (== x) xs))
+pack' [] = []
+pack' xs'@(x:xs) = takeWhile (==x) xs':pack' (dropWhile (== x) xs)
 
 
--- b
+-- (b)
 -- additional built-in functions: map, length
 -- reuse the pack function just to get the lists as elements,
 -- after this we just apply a function f to each list element,
@@ -66,50 +65,60 @@ pack'' (x:xs) = (takeWhile (==x) (x:xs)) : (pack'' (dropWhile (== x) xs))
 encode :: [Char] -> [(Int, Char)]
 encode xs =  map f (pack xs)
     where f :: [Char] -> (Int, Char)
-          f [] = error "This should not happen."
-          f (x:xs) = (length (x:xs), x)
+          f xs = (length xs, head xs)
 
--- additional built-in functions: foldr, "anonymous function \", (.)
--- we can leave the pattern blank if they could be applied at
--- the end of the function
+-- Advanced: Anonymous function (lambda)
+-- The function f is really small, so we can use an anonymous function.
+-- We can omit the argument of encode' and use function composition. This is
+-- called pointfree style:
+-- https://wiki.haskell.org/Pointfree
 encode' :: [Char] -> [(Int, Char)]
-encode' = map (\a -> (length a, head a)) . pack
+encode' = map (\l -> (length l, head l)) . pack
 
--- c
+-- (c)
 -- intuitive idea, to split the first element a tuple
 -- into its pattern (num,lit) and to work than with then
 -- with this elements.
 decode :: [(Int, Char)] -> [Char]
-decode [] = []
-decode ((num, lit):xs) = (rep num lit) ++ decode xs
+decode [] = ""
+decode ((n, c):xs) = rep n c ++ decode xs
     where rep :: Int -> Char -> [Char]
           rep 0 _ = []
-          rep n l = l : rep (n-1) l
+          rep n c = c : rep (n-1) c
 
--- additional built-in functions: replicate, fst, snd
--- the same using built-in functions replicate for make a list of
--- same elements.
+-- Advanced: Use built-in functions
+-- The Haskell prelude already includes the functions replicate, fst, snd
+-- replicate: Repeat an element a given number of times
+-- http://hackage.haskell.org/package/base-4.8.0.0/docs/Prelude.html#v:replicate
+-- fst, snd: Extract components out of pairs
+-- http://hackage.haskell.org/package/base-4.8.0.0/docs/Prelude.html#v:fst
 decode' :: [(Int, Char)] -> [Char]
 decode' [] = []
 decode' (x:xs) =  replicate (fst x) (snd x) ++ decode xs
 
--- d
+-- (d)
 -- additional built-in functions: head, tail, init, last
--- intuitive idea with ++ to append elements to a list
--- Problem ++ is inefficient
+-- intuitive approach: Shift elements to the end of the list with ++ until
+-- the count reaches zero.
+-- Problem: ++ can be inefficient
 rotate :: [Int] -> Int -> [Int]
-rotate [] _ = []
-rotate xs y
-    | y == 0    = xs
-    | y > 0     = rotate ((tail xs) ++ ([head xs])) (y-1)
-    | otherwise = rotate (last xs : init xs) (y+1)
+rotate []         n = []
+rotate xs'@(x:xs) n
+    | n == 0    = xs'
+    | n < 0     = rotate xs' (length xs' + n)
+    | otherwise = rotate (xs ++ [x]) (n-1)
 
--- additional built-in functions: drop, take, length
--- just use the built-in function drop and take
--- to manage a number of elements in a list
--- and than do ++ only once
+-- Advanced: take, drop, cycle
+-- Use the built-in functions take, drop and cycle
+-- take: take the first n elements of a list
+-- http://hackage.haskell.org/package/base-4.8.0.0/docs/Prelude.html#v:take
+-- drop: drop the first n elements of a list
+-- http://hackage.haskell.org/package/base-4.8.0.0/docs/Prelude.html#v:drop
+-- repeat a list
+-- http://hackage.haskell.org/package/base-4.8.0.0/docs/Prelude.html#v:cycle
 rotate' :: [Int] -> Int -> [Int]
 rotate' xs n
-    | n >= 0 = (drop n xs) ++ (take n xs)
-    | otherwise = (drop (length xs + n) xs ) ++ (take (length xs + n) xs)
+    | n < 0     = rotate' xs (l + n)
+    | otherwise = take l $ drop n $ cycle xs
+    where l = length xs
 
