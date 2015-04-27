@@ -58,18 +58,20 @@ pack' xs'@(x:xs) = takeWhile (==x) xs':pack' (dropWhile (== x) xs)
 
 
 -- (b)
--- additional built-in functions: map, length
--- reuse the pack function just to get the lists as elements,
--- after this we just apply a function f to each list element,
--- to transfer it to a tuple.
+-- We reuse the pack function to get lists of characters. We can compress these
+-- lists then using the length function.
 encode :: [Char] -> [(Int, Char)]
-encode xs =  map f (pack xs)
-    where f :: [Char] -> (Int, Char)
-          f xs = (length xs, head xs)
+encode xs = compress (pack xs)
+    where
+        compress :: [[Char]] -> [(Int, Char)]
+        compress [] = []
+        compress (l:ls) = (length l, head l):compress ls
 
--- Advanced: Anonymous function (lambda)
--- The function f is really small, so we can use an anonymous function.
--- We can omit the argument of encode' and use function composition. This is
+-- Advanced: map, Anonymous function (lambda)
+-- We've seen map before. It allows the transformation of a list using a helper
+-- function. The function would be really small, so we can use an anonymous
+-- function.
+-- We can even omit the argument of encode' and use function composition. This is
 -- called pointfree style:
 -- https://wiki.haskell.org/Pointfree
 encode' :: [Char] -> [(Int, Char)]
