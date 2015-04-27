@@ -13,7 +13,7 @@ cmpr :: [Int] -> [Int] -> Bool
 cmpr []     []     = True
 cmpr []     _      = False
 cmpr _      []     = False
-cmpr (x:xs) (y:ys) = (x == y) && (cmpr' xs ys)
+cmpr (x:xs) (y:ys) = (x == y) && (cmpr xs ys)
 
 
 -- Advanced: foldr and zipWith
