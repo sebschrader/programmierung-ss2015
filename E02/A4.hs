@@ -31,7 +31,7 @@ eval (Exp a 0) _ = 1
 eval (Exp a b) f = (eval a f) * (eval (Exp a (b-1)) f)
 
 -- b
--- additional inbuild functions: show
+-- additional built-in functions: show
 -- show makes a something marked with "derving show" to a String
 display :: Expr -> String
 display (Lit a) = show a

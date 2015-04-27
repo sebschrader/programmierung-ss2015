@@ -14,12 +14,12 @@ compare' [] _  = False
 compare' _ []  = False
 compare' (x:xs) (y:ys) = (x == y) &&  (compare' xs ys)
 
--- additional inbuild functions: length, foldr, zipWith
+-- additional built-in functions: length, foldr, zipWith
 compare'' :: [Int] -> [Int] -> Bool
 compare'' xs ys =  (length xs) == (length  ys) && 
                     (foldr (&&) True $ zipWith (==) xs ys)
 
--- additional inbuild functions: and, foldr, zipWith, length
+-- additional built-in functions: and, foldr, zipWith, length
 -- the foldr (&&) True could also exchanged by and
 -- for usage with infint list we have to switch the order of evaluation
 compare''' :: [Int] -> [Int] -> Bool
@@ -36,7 +36,7 @@ merge (x:xs) (y:ys)
        | otherwise = error ("This should not happen! xs:"
                     ++ (show xs) ++ "ys:" ++ (show ys))  
 
--- additional inbuild functions: min
+-- additional built-in functions: min
 -- idea of taking to compare allways the first elements of booth lists 
 -- and take the smaller one.
 merge' :: [Int] -> [Int] -> [Int]
