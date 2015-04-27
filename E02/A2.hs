@@ -53,7 +53,7 @@ takeEqual c xs'@(x:xs)
 -- http://hackage.haskell.org/package/base-4.8.0.0/docs/Prelude.html#v:dropWhile
 -- We partially apply the equality function (==)
 pack' :: [Char] -> [[Char]]
-pack' [] = []
+pack' []         = []
 pack' xs'@(x:xs) = takeWhile (==x) xs':pack' (dropWhile (== x) xs)
 
 
@@ -95,7 +95,7 @@ decode ((n, c):xs) = rep n c ++ decode xs
 -- fst, snd: Extract components out of pairs
 -- http://hackage.haskell.org/package/base-4.8.0.0/docs/Prelude.html#v:fst
 decode' :: [(Int, Char)] -> [Char]
-decode' [] = []
+decode' []     = []
 decode' (x:xs) =  replicate (fst x) (snd x) ++ decode xs
 
 -- (d)
@@ -106,9 +106,9 @@ decode' (x:xs) =  replicate (fst x) (snd x) ++ decode xs
 rotate :: [Int] -> Int -> [Int]
 rotate []         n = []
 rotate xs'@(x:xs) n
-    | n == 0    = xs'
-    | n < 0     = rotate xs' (length xs' + n)
-    | otherwise = rotate (xs ++ [x]) (n-1)
+    | n == 0        = xs'
+    | n < 0         = rotate xs' (length xs' + n)
+    | otherwise     = rotate (xs ++ [x]) (n-1)
 
 -- Advanced: take, drop, cycle
 -- Use the built-in functions take, drop and cycle
