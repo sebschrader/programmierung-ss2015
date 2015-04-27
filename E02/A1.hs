@@ -7,24 +7,34 @@ module A1
 , merge'
 ) where
 
--- a
--- intuitive idea with patterns
+-- (a)
+-- intuitive approach with explicit patterns
 compare :: [Int] -> [Int] -> Bool
-compare [] [] = True
-compare [] _  = False
-compare _ []  = False
-compare (x:xs) (y:ys) = (x == y) &&  (compare' xs ys)
+compare []     []     = True
+compare []     _      = False
+compare _      []     = False
+compare (x:xs) (y:ys) = (x == y) && (compare' xs ys)
 
--- additional built-in functions: length, foldr, zipWith
+
+-- Advanced: foldr and zipWith
+-- zipWith: Combines two lists with an helper function to a new list
+-- http://hackage.haskell.org/package/base-4.8.0.0/docs/Prelude.html#v:zipWith
+-- foldr: Folds (reduces) a list to a single value using a helper function
+-- http://hackage.haskell.org/package/base-4.8.0.0/docs/Prelude.html#v:foldr
+-- zipWith truncates the longer list, therefore we have to compare the
+-- lengths of the lists too
 compare' :: [Int] -> [Int] -> Bool
-compare' xs ys =  (length xs) == (length  ys) &&
-                    (foldr (&&) True $ zipWith (==) xs ys)
+compare' xs ys = (length xs) == (length  ys) &&
+                 (foldr (&&) True $ zipWith (==) xs ys)
 
--- additional built-in functions: and, foldr, zipWith, length
--- the foldr (&&) True could also exchanged by and
--- for usage with infint list we have to switch the order of evaluation
+-- Still advanced:
+-- foldr (&&) True is a bit cryptic and can be replaced with and
+-- http://hackage.haskell.org/package/base-4.8.0.0/docs/Prelude.html#v:and
+--
+-- length does not work with infinite list, so we can switch the order of
+-- evaluation, but then again it can't ever work for equal infinite lists.
 compare'' :: [Int] -> [Int] -> Bool
-compare'' xs ys =  (and $ zipWith (==) xs ys) && length xs == length  ys
+compare'' xs ys = (and $ zipWith (==) xs ys) && length xs == length  ys
 
 -- (b)
 merge :: [Int] -> [Int] -> [Int]
