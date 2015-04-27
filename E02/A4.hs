@@ -9,7 +9,7 @@ data Expr = Lit Int
     | Add Expr Expr
     | Mul Expr Expr
     | Exp Expr Int
--- type only says that the name Assignment 
+-- type only says that the name Assignment
 -- stands for function with type (Char -> Int)
 type Assignment = Char -> Int
 
@@ -39,3 +39,4 @@ display (Var a) =  [a]
 display (Add a b) =  "(" ++ (display a) ++ " + " ++ (display b) ++ ")"
 display (Mul a b) = (display a) ++ " * " ++ (display b)
 display (Exp a b) =  "(" ++ (display a) ++ ")^" ++ (show b)
+

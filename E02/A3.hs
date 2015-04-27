@@ -8,7 +8,7 @@ module A3
 data Tree = Leaf Int | Branch Tree Tree deriving Show
 
 -- a
-tree1 = Branch ( Branch (Leaf 1) (Leaf 2)) (Branch  (Branch (Leaf 3) (Leaf 4)) (Leaf 5)) 
+tree1 = Branch ( Branch (Leaf 1) (Leaf 2)) (Branch  (Branch (Leaf 3) (Leaf 4)) (Leaf 5))
 
 --b
 -- the patterns are now the different type constructors.
@@ -20,3 +20,4 @@ countLeaf (Branch left right) = (countLeaf left) + (countLeaf right)
 leafsToList :: Tree -> [Int]
 leafsToList (Leaf a) = [a]
 leafsToList (Branch left right) = (leafsToList left) ++ (leafsToList right)
+

@@ -1,4 +1,4 @@
-module A2 
+module A2
 ( pack
 , pack'
 , pack''
@@ -13,7 +13,7 @@ module A2
 , example3
 ) where
 
-example1 :: [Char] 
+example1 :: [Char]
 example1 = ['a','a','b','b','b','a']
 
 example2 :: [(Int,Char)]
@@ -24,9 +24,9 @@ example3 = [1,2,3,4]
 
 --a
 ---- additional built-in functions: reverse
--- intuitive idea of having a help function f 
--- ((y:ys):yss) means that we take the first element (y:ys) a [Char] 
--- and the restlist yss a [[Char]] and compare the first element 
+-- intuitive idea of having a help function f
+-- ((y:ys):yss) means that we take the first element (y:ys) a [Char]
+-- and the restlist yss a [[Char]] and compare the first element
 -- with our first Element x from our List (x:xs) [Char].
 -- But you have to imagine that we reverse it by this step.
 -- So we have to reverse it at the end again.
@@ -47,7 +47,7 @@ pack' xs = foldr f [] xs
     where f :: Char -> [[Char]] -> [[Char]]
           f x [] = [[x]]
           f x ((y:ys):yss)
-              | x == y = ((x:y:ys):yss) 
+              | x == y = ((x:y:ys):yss)
               | otherwise = ([x]:(y:ys):yss)
 
 -- additional built-in functions: takeWhile, dropWhile
@@ -68,15 +68,15 @@ encode xs =  map f (pack xs)
     where f :: [Char] -> (Int, Char)
           f [] = error "This should not happen."
           f (x:xs) = (length (x:xs), x)
-          
+
 -- additional built-in functions: foldr, "anonymous function \", (.)
--- we can leave the pattern blank if they could be applied at 
+-- we can leave the pattern blank if they could be applied at
 -- the end of the function
 encode' :: [Char] -> [(Int, Char)]
 encode' = map (\a -> (length a, head a)) . pack
 
 -- c
--- intuitive idea, to split the first element a tuple 
+-- intuitive idea, to split the first element a tuple
 -- into its pattern (num,lit) and to work than with then
 -- with this elements.
 decode :: [(Int, Char)] -> [Char]
@@ -84,14 +84,14 @@ decode [] = []
 decode ((num, lit):xs) = (rep num lit) ++ decode xs
     where rep :: Int -> Char -> [Char]
           rep 0 _ = []
-          rep n l = l : rep (n-1) l 
-          
+          rep n l = l : rep (n-1) l
+
 -- additional built-in functions: replicate, fst, snd
--- the same using built-in functions replicate for make a list of 
+-- the same using built-in functions replicate for make a list of
 -- same elements.
 decode' :: [(Int, Char)] -> [Char]
 decode' [] = []
-decode' (x:xs) =  replicate (fst x) (snd x) ++ decode xs 
+decode' (x:xs) =  replicate (fst x) (snd x) ++ decode xs
 
 -- d
 -- additional built-in functions: head, tail, init, last
@@ -99,7 +99,7 @@ decode' (x:xs) =  replicate (fst x) (snd x) ++ decode xs
 -- Problem ++ is inefficient
 rotate :: [Int] -> Int -> [Int]
 rotate [] _ = []
-rotate xs y 
+rotate xs y
     | y == 0    = xs
     | y > 0     = rotate ((tail xs) ++ ([head xs])) (y-1)
     | otherwise = rotate (last xs : init xs) (y+1)
@@ -109,6 +109,7 @@ rotate xs y
 -- to manage a number of elements in a list
 -- and than do ++ only once
 rotate' :: [Int] -> Int -> [Int]
-rotate' xs n 
+rotate' xs n
     | n >= 0 = (drop n xs) ++ (take n xs)
-    | otherwise = (drop (length xs + n) xs ) ++ (take (length xs + n) xs)  
+    | otherwise = (drop (length xs + n) xs ) ++ (take (length xs + n) xs)
+
