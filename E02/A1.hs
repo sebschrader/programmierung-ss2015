@@ -1,19 +1,19 @@
 -- We can declare the names a module exports
 module A1
-( compare
-, compare'
-, compare''
+( cmpr
+, cmpr'
+, cmpr''
 , merge
 , merge'
 ) where
 
 -- (a)
 -- intuitive approach with explicit patterns
-compare :: [Int] -> [Int] -> Bool
-compare []     []     = True
-compare []     _      = False
-compare _      []     = False
-compare (x:xs) (y:ys) = (x == y) && (compare' xs ys)
+cmpr :: [Int] -> [Int] -> Bool
+cmpr []     []     = True
+cmpr []     _      = False
+cmpr _      []     = False
+cmpr (x:xs) (y:ys) = (x == y) && (cmpr' xs ys)
 
 
 -- Advanced: foldr and zipWith
@@ -23,8 +23,8 @@ compare (x:xs) (y:ys) = (x == y) && (compare' xs ys)
 -- http://hackage.haskell.org/package/base-4.8.0.0/docs/Prelude.html#v:foldr
 -- zipWith truncates the longer list, therefore we have to compare the
 -- lengths of the lists too
-compare' :: [Int] -> [Int] -> Bool
-compare' xs ys = (length xs) == (length  ys) &&
+cmpr' :: [Int] -> [Int] -> Bool
+cmpr' xs ys = (length xs) == (length  ys) &&
                  (foldr (&&) True $ zipWith (==) xs ys)
 
 -- Still advanced:
@@ -33,8 +33,8 @@ compare' xs ys = (length xs) == (length  ys) &&
 --
 -- length does not work with infinite list, so we can switch the order of
 -- evaluation, but then again it can't ever work for equal infinite lists.
-compare'' :: [Int] -> [Int] -> Bool
-compare'' xs ys = (and $ zipWith (==) xs ys) && length xs == length  ys
+cmpr'' :: [Int] -> [Int] -> Bool
+cmpr'' xs ys = (and $ zipWith (==) xs ys) && length xs == length  ys
 
 -- (b)
 merge :: [Int] -> [Int] -> [Int]
