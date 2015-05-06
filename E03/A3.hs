@@ -18,8 +18,9 @@ isHeap (Branch x l@(Branch xl _ _) r@(Branch xr _ _))
     = x >= xl && x >= xr && isHeap l && isHeap r
 
 isHeap' :: Tree -> Bool
-isHeap' (NIL) = True
-isHeap' (Branch a l r) = (isBigger a l) && (isBigger a r)
+isHeap' NIL            = True
+isHeap' (Branch a l r) = isBigger a l && isBigger a r && isHeap l && isHeap r
     where isBigger :: Int -> Tree -> Bool
-          isBigger x (NIL) = True
+          isBigger x NIL            = True
           isBigger x (Branch a l r) = a < x
+
