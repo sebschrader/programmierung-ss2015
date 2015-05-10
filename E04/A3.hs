@@ -4,6 +4,9 @@ module E04.A3
 )
 where
 
+f :: [Int] -> [Int]
+f xs = reverse (filter (>0) xs)
+
 pow :: Int -> (a -> a) -> a -> a
 pow 0 _ x = x
 pow n f x = pow (n-1) f (f x)
