@@ -7,7 +7,7 @@ where
 -- http://hackage.haskell.org/package/base-4.8.0.0/docs/Prelude.html#v:filter
 -- http://hackage.haskell.org/package/base-4.8.0.0/docs/Prelude.html#v:.
 --
--- Higher order function are functions that functions as arguments.
+-- Higher order function are functions that take functions as arguments.
 -- For example filter has the type signature (a -> Bool) -> [a] -> [a].
 --
 -- (>) has type of Ord a => a -> (a -> Bool)
