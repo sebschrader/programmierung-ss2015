@@ -1,21 +1,23 @@
-module E04.A2 
-( Tree
-, path
-, nodes
-)
-where
+module E04.A2 where
 
 data Tree a = Node a (Tree a) (Tree a) | Leaf a deriving Show
 
+-- Idea: Use a argument to count the distance from the root node.
 path :: Tree a -> Tree Int
-path t  = path' 1 t
+path = path' 1
+-- The first argument has been omitted above:
+--path t  = path' 1 t
     where path' :: Int -> Tree a ->  Tree Int
-          path' x (Leaf a) = (Leaf x)
-          path' x (Node a t1 t2) = (Node x (path' (x+1) t1) (path' (x+1) t2)) 
+          path' n (Leaf _    ) = Leaf n
+          path' n (Node _ l r) = Node n (path' (n+1) l) (path' (n+1) r)
 
 nodes :: Tree a -> Tree [a]
-nodes (Leaf x) = (Leaf [x])
-nodes (Node x t1 t2) = (Node  [x,(getE t1),(getE t2)] (nodes t1) (nodes t2))
-    where getE :: Tree a -> a
-          getE (Leaf x) = x
-          getE (Node x _ _) = x
+-- Please note: The variable a in the type signature above is not the same as
+-- the variable a used in the patterns below. The first refers to a type (e.g.
+-- Int), while the latter refers to a value of that type (e.g. 5).
+nodes (Leaf a    ) = Leaf [a]
+nodes (Node a l r) = Node [a, getKey l, getKey r] (nodes l) (nodes r)
+    where getKey :: Tree a -> a
+          getKey (Leaf a    ) = a
+          getKey (Node a _ _) = a
+
