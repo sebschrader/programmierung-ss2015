@@ -7,18 +7,18 @@ example = (Node 2 (Node 1 NIL NIL) NIL) :: Tree
 -- (a)
 insert :: Tree -> [Int] -> Tree
 insert t [] = t
-insert t (x:xs) =  insertList (insert t x) xs
+insert t (x:xs) =  insert (insertElem t x) xs
 
 insertElem :: Tree -> Int -> Tree
 insertElem NIL y    = Node y NIL NIL
 insertElem (Node x l r) y
-    | y < x     = Node x (insert l y) r
-    | otherwise = Node x l            (insert r y)
+    | y < x     = Node x (insertElem l y) r
+    | otherwise = Node x l                (insertElem r y)
 
 -- Advanced: Use foldl to fold the list into a tree
 -- http://hackage.haskell.org/package/base-4.8.0.0/docs/Prelude.html#v:foldl
 insert' :: Tree -> [Int] -> Tree
-insert' t xs = foldl insert t xs
+insert' t xs = foldl insertElem t xs
 -- point-free:
 --insert' = foldl insert
 
