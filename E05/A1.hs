@@ -27,7 +27,7 @@ treeZipWith :: (a -> b -> c) -> Tree a -> Tree b -> Tree c
 treeZipWith f (Leaf xa)       (Leaf xb)       = 
     Leaf (f xa xb)
 treeZipWith f (Node xa la ra) (Node xb lb rb) = 
-    Node (f xa xb) (treeZipWith f la lb) (treeZipWith f la lb) 
+    Node (f xa xb) (treeZipWith f la lb) (treeZipWith f ra rb)
 treeZipWith f (Leaf xa)       (Node xb la ra) =
     Leaf (f xa xb)
 treeZipWith f (Node xa la ra) (Leaf xb)       =
