@@ -4,7 +4,7 @@ module E05.A1 where
 class Zippable t where
     genericZipWith :: (a -> b -> c) -> t a -> t b -> t c
     genericZip :: t a -> t b -> t (a,b)
-    genericZip = genericZipWith (\ x y -> (x, y))
+    genericZip = genericZipWith (,)
 
 listZipWith :: (a -> b -> c) -> [a] -> [b] -> [c]
 listZipWith f (xa : xas) (xb : xbs) = (f xa xb) : listZipWith f xas xbs
