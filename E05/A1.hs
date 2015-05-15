@@ -23,15 +23,12 @@ instance Zippable [] where
 
 data Tree a = Node a (Tree a) (Tree a) | Leaf a deriving Show
 
-treeZipWith :: (a -> b -> c) -> Tree a -> Tree b -> Tree c
-treeZipWith f (Leaf xa)       (Leaf xb)       = 
-    Leaf (f xa xb)
-treeZipWith f (Node xa la ra) (Node xb lb rb) = 
-    Node (f xa xb) (treeZipWith f la lb) (treeZipWith f ra rb)
-treeZipWith f (Leaf xa)       (Node xb la ra) =
-    Leaf (f xa xb)
-treeZipWith f (Node xa la ra) (Leaf xb)       =
-    Leaf (f xa xb)
-
 instance Zippable Tree where
-    genericZipWith = treeZipWith
+    genericZipWith f (Leaf xa      ) (Leaf xb      )
+        = Leaf (f xa xb)
+    genericZipWith f (Node xa la ra) (Node xb lb rb)
+        = Node (f xa xb) (genericZipWith f la lb) (genericZipWith f ra rb)
+    genericZipWith f (Leaf xa      ) (Node xb la ra)
+        = Leaf (f xa xb)
+    genericZipWith f (Node xa la ra) (Leaf xb      )
+        = Leaf (f xa xb)
