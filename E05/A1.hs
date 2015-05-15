@@ -34,3 +34,10 @@ instance Zippable Tree where
             getKey:: Tree c -> c
             getKey (Leaf c    ) = c
             getKey (Node c _ _) = c
+
+
+data RoseTree a = RNode a [RoseTree a] deriving Show
+
+instance Zippable RoseTree where
+    genericZipWith f (RNode a rtas) (RNode b rtbs)
+        = RNode (f a b) (zipWith (genericZipWith f) rtas rtbs)
