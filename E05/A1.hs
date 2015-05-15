@@ -28,7 +28,9 @@ instance Zippable Tree where
         = Leaf (f xa xb)
     genericZipWith f (Node xa la ra) (Node xb lb rb)
         = Node (f xa xb) (genericZipWith f la lb) (genericZipWith f ra rb)
-    genericZipWith f (Leaf xa      ) (Node xb la ra)
-        = Leaf (f xa xb)
-    genericZipWith f (Node xa la ra) (Leaf xb      )
-        = Leaf (f xa xb)
+    genericZipWith f ta              tb
+        = Leaf (f (getKey ta) (getKey tb))
+        where
+            getKey:: Tree c -> c
+            getKey (Leaf c    ) = c
+            getKey (Node c _ _) = c
