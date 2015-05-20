@@ -24,8 +24,6 @@ instance Zippable [] where
 data Tree a = Node a (Tree a) (Tree a) | Leaf a deriving Show
 
 instance Zippable Tree where
-    genericZipWith f (Leaf xa      ) (Leaf xb      )
-        = Leaf (f xa xb)
     genericZipWith f (Node xa la ra) (Node xb lb rb)
         = Node (f xa xb) (genericZipWith f la lb) (genericZipWith f ra rb)
     genericZipWith f ta              tb
