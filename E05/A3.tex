@@ -1,0 +1,213 @@
+\documentclass[t]{beamer}
+\usepackage{xparse}
+\usepackage{fontspec}
+\usepackage{amsmath}
+\usepackage{unicode-math}
+\input{clap}
+
+\NewDocumentCommand\Decomposition{}{%
+  \quad\overset{\mathclap{\text{Dekomp.}}}{\Rightarrow}\quad%
+}
+\NewDocumentCommand\Eliminate{}{%
+  \quad\overset{\mathclap{\text{Elim.}}}{\Rightarrow}\quad%
+}
+\NewDocumentCommand\Substitute{}{%
+  \quad\overset{\mathclap{\text{Subst.}}}{\Rightarrow}\quad%
+}
+\NewDocumentCommand\Swap{}{%
+  \quad\overset{\mathclap{\text{Vert.}}}{\Rightarrow}\quad%
+}
+
+\begin{document}
+
+\begin{frame}{Aufgabe 3}
+  \begin{align*}
+    δ(γ(x_3), γ(γ(α)), σ(γ(x_2), x_1      ))   & \\
+    δ(γ(x_3), γ(x_3 ), σ(γ(α  ),   γ(γ(x_2)))) &
+  \end{align*}
+\end{frame}
+
+
+\begin{frame}{Aufgabe 3}
+  \begin{align*}
+    \uncover<+->{
+      &
+      \left\{
+      \begin{pmatrix}
+        δ(γ(x_3), γ(γ(α)), σ(γ(x_2), x_1      )) \\
+        δ(γ(x_3), γ(x_3 ), σ(γ(α  ), γ(γ(x_2))))
+      \end{pmatrix}
+      \right\}
+    }
+    \\
+    \uncover<+->{
+      \Decomposition
+      &
+      \left\{
+      \begin{pmatrix}
+        γ(x_3) \\
+        γ(x_3)
+      \end{pmatrix}
+      ,
+      \begin{pmatrix}
+        γ(γ(α))\\
+        γ(x_3 )
+      \end{pmatrix}
+      ,
+      \begin{pmatrix}
+        σ(γ(x_2), x_1      ) \\
+        σ(γ(α  ), γ(γ(x_2)))
+      \end{pmatrix}
+      \right\}
+    }
+    \\
+    \uncover<+->{
+      \Decomposition
+      &
+      \left\{
+      \begin{pmatrix}
+        x_3 \\
+        x_3
+      \end{pmatrix}
+      ,
+      \begin{pmatrix}
+        γ(α)) \\
+        x_3
+      \end{pmatrix}
+      ,
+      \begin{pmatrix}
+        γ(x_2) \\
+        γ(α  )
+      \end{pmatrix}
+      ,
+      \begin{pmatrix}
+        x_1       \\
+        γ(γ(x_2))
+      \end{pmatrix}
+      \right\}
+    }
+    \\
+    \uncover<+->{
+      \Eliminate
+      &
+      \left\{
+      \begin{pmatrix}
+        γ(α)) \\
+        x_3
+      \end{pmatrix}
+      ,
+      \begin{pmatrix}
+        γ(x_2) \\
+        γ(α  )
+      \end{pmatrix}
+      ,
+      \begin{pmatrix}
+        x_1       \\
+        γ(γ(x_2))
+      \end{pmatrix}
+      \right\}
+    }
+    \\
+    \uncover<+->{
+      \Swap
+      &
+      \left\{
+      \begin{pmatrix}
+        x_3   \\
+        γ(α))
+      \end{pmatrix}
+      ,
+      \begin{pmatrix}
+        γ(x_2) \\
+        γ(α  )
+      \end{pmatrix}
+      ,
+      \begin{pmatrix}
+        x_1       \\
+        γ(γ(x_2))
+      \end{pmatrix}
+      \right\}
+    }
+    \\
+    \uncover<+->{
+      \Decomposition
+      &
+      \left\{
+      \begin{pmatrix}
+        x_3   \\
+        γ(α))
+      \end{pmatrix}
+      ,
+      \begin{pmatrix}
+        x_2 \\
+        α
+      \end{pmatrix}
+      ,
+      \begin{pmatrix}
+        x_1       \\
+        γ(γ(x_2))
+      \end{pmatrix}
+      \right\}
+    }
+  \end{align*}
+\end{frame}
+
+\begin{frame}{Aufgabe 3 (cont.)}
+  \begin{align*}
+    \uncover<+->{
+      &
+      \left\{
+      \begin{pmatrix}
+        x_3   \\
+        γ(α))
+      \end{pmatrix}
+      ,
+      \begin{pmatrix}
+        x_2 \\
+        α
+      \end{pmatrix}
+      ,
+      \begin{pmatrix}
+        x_1       \\
+        γ(γ(x_2))
+      \end{pmatrix}
+      \right\}
+    }
+    \\
+    \uncover<+->{
+      \Substitute
+      &
+      \left\{
+      \begin{pmatrix}
+        x_3   \\
+        γ(α))
+      \end{pmatrix}
+      ,
+      \begin{pmatrix}
+        x_2 \\
+        α
+      \end{pmatrix}
+      ,
+      \begin{pmatrix}
+        x_1       \\
+        γ(γ(α))
+      \end{pmatrix}
+      \right\}
+    }
+  \end{align*}
+  \uncover<+->{
+    \begin{equation*}
+      \begin{matrix}
+        x_1 \mapsto γ(γ(α))
+        \qquad
+        &
+        x_2 \mapsto α
+        &
+        \qquad
+        x_3 \mapsto γ(α)
+      \end{matrix}
+    \end{equation*}
+  }
+\end{frame}
+
+\end{document}
