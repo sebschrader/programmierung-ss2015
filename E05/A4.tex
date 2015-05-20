@@ -1,0 +1,67 @@
+\documentclass{beamer}
+\usepackage{xparse}
+\usepackage{fontspec}
+\usepackage{amsmath}
+\usepackage{unicode-math}
+\usepackage{listings}
+\input{clap}
+
+\lstset{escapeinside=@@,language={Haskell},basicstyle=\ttfamily}
+\NewDocumentCommand\Eq{m}{%
+  $\mathtt{\overset{\mathclap{\text{#1}}}{=}}$%
+}
+
+\begin{document}
+
+\begin{frame}[fragile]{Zu zeigen}
+  Für alle Listen \lstinline{xs :: [Int]} gilt:
+
+\begin{lstlisting}
+sum (foo xs) = 2 * sum xs - length xs
+\end{lstlisting}
+
+\end{frame}
+
+
+\begin{frame}[fragile]{Induktionsanfang (IA)}
+  Sei \lstinline{xs = []}, dann:
+
+\begin{lstlisting}
+@\phantom{$=$}@ sum (foo [])@\pause@
+@\Eq{(2)}@ sum []@\pause@
+@\Eq{(6)}@ 0@\pause@
+@$=$@ 2 * 0 - 0@\pause@
+@\Eq{(6)}@ 2 * sum [] - 0@\pause@
+@\Eq{(2)}@ 2 * sum [] - length []
+\end{lstlisting}
+\end{frame}
+
+
+\begin{frame}[fragile]{Induktionsbehauptung (IB)}
+  Es gibt eine beliebige, aber feste Liste \lstinline{xs'} für die gilt:
+
+\begin{lstlisting}
+sum (foo xs') = 2 * sum xs' - length xs'
+\end{lstlisting}
+\end{frame}
+
+
+\begin{frame}[fragile]{Induktionsschritt (IS)}
+
+  Für alle \lstinline{x::Int} gilt: Sei \lstinline{xs = (x:xs')}:
+
+\begin{lstlisting}
+@\phantom{$=$}@ sum (foo (x:xs'))@\pause@
+@\Eq{(3)}@ sum (x : x : (-1) : foo (xs'))@\pause@
+@\Eq{(7)}@ x + sum (x : (-1) : foo (xs'))@\pause@
+@\Eq{(7)}@ x + x + sum ((-1) : foo (xs'))@\pause@
+@\Eq{(7)}@ x + x + (-1) + sum (foo (xs'))@\pause@
+@\Eq{IV}@ x + x + (-1) + 2 * sum xs' - length xs'@\pause@
+@$=$@ 2 * x + 2 * sum xs' - 1 - length xs'@\pause@
+@$=$@ 2 * (x + sum xs') - (1 + length xs')@\pause@
+@\Eq{(7)}@ 2 * sum (x:xs') - (1 + length xs')@\pause@
+@\Eq{(11)}@ 2 * sum (x:xs') - length (x:xs') @$\qed$@
+\end{lstlisting}
+\end{frame}
+
+\end{document}
