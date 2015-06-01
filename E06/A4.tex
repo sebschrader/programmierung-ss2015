@@ -1,0 +1,80 @@
+\documentclass[t]{beamer}
+\usepackage{xparse}
+\usepackage{fontspec}
+\usepackage{amsmath}
+\usepackage{mathtools}
+\usepackage{unicode-math}
+
+\NewDocumentCommand\FV{}{\alert<2>}
+\NewDocumentCommand\GV{}{\alert<3>}
+\NewDocumentCommand\alphaconversion{}{\Rightarrow_α}
+\NewDocumentCommand\betareduction{}{\Rightarrow_β}
+
+\begin{document}
+
+\begin{frame}{Aufgabe 4a}
+  \begin{gather*}
+    (λ \GV{x} . x  \FV{y}) (λ \GV{y}.y) \\
+    \uncover<2->{
+      FV = \{ y \} \\
+    }
+    \uncover<3->{
+      GV = \{ x, y \}
+    }
+  \end{gather*}
+\end{frame}
+
+\begin{frame}{Aufgabe 4a}
+  \begin{gather*}
+    (λ \GV{x} . (λ \GV{y} . \FV{z} (λ \GV{z} . z (λ \GV{x} . y)))) \\
+    \uncover<2->{
+      FV = \{ z \} \\
+    }
+    \uncover<3->{
+      GV = \{ x, y, z \}
+    }
+  \end{gather*}
+\end{frame}
+
+\begin{frame}{Aufgabe 4a}
+  \begin{gather*}
+    (λ \GV{x} . (λ \GV{y} . x \FV{z} ( y \FV{z} ))) (λ \GV{x} . \FV{y} (λ \GV{y} . y )) \\
+    \uncover<2->{
+      FV = \{ y, z \} \\
+    }
+    \uncover<3->{
+      GV = \{ x, y \}
+    }
+  \end{gather*}
+\end{frame}
+
+
+\begin{frame}{Aufgabe 4b}
+  \begin{align*}
+    \uncover<+->{
+      &
+      (λ x . \underbrace{(λ y . x z ( y z ))}_{GV = \{ y \}}) \underbrace{(λ x . y (λ y . y ))}_{FV = \{ y \}}
+      \\
+    }
+    \uncover<+->{
+      \alphaconversion
+      &
+      (λ x . (λ y' . x z ( y' z ))) (λ x . y (λ y . y ))
+      \\
+    }
+    \uncover<+->{
+      \betareduction
+      &
+      (λ y' . (λ x . \underbrace{y (λ y . y )}_{GV = \{y\}}) \underbrace{\vphantom{(}z}_{FV = \{z\}} ( y' z ))
+      \\
+    }
+    \uncover<+->{
+      \betareduction
+      &
+      (λ y' . y (λ y . y ) ( y' z ))
+      \\
+    }
+  \end{align*}
+\end{frame}
+
+\end{document}
