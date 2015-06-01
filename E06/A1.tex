@@ -1,0 +1,175 @@
+\documentclass[t]{beamer}
+\usepackage{xparse}
+\usepackage{fontspec}
+\usepackage{amsmath}
+\usepackage{unicode-math}
+\input{../unification}
+
+\begin{document}
+
+\begin{frame}{Aufgabe 1}
+  \begin{alignat*}{3}
+    t_1 & = σ(σ(x_1,    \, & α), \, & σ(γ(x_3), \, & x_3)) \\
+    t_2 & = σ(σ(γ(x_2), \, & α), \, & σ(x_2,   \, & x_3))
+  \end{alignat*}
+\end{frame}
+
+
+\begin{frame}{Aufgabe 1}
+  \begin{align*}
+    \uncover<+->{
+      &
+      \left\{
+      \begin{pmatrix}
+        σ(σ(x_1,    α), & σ(γ(x_3), x_3)) \\
+        σ(σ(γ(x_2), α), & σ(x_2,    x_3))
+      \end{pmatrix}
+      \right\}
+    }
+    \\
+    \uncover<+->{
+      \Decomposition
+      &
+      \left\{
+      \begin{pmatrix}
+        σ(x_1,    α) \\
+        σ(γ(x_2), α)
+      \end{pmatrix}
+      ,
+      \begin{pmatrix}
+        σ(γ(x_3), x_3) \\
+        σ(x_2,    x_3)
+      \end{pmatrix}
+      \right\}
+    }
+    \\
+    \uncover<+->{
+      \Decomposition
+      &
+      \left\{
+      \begin{pmatrix}
+        x_1 \\
+        γ(x_2)
+      \end{pmatrix}
+      ,
+      \begin{pmatrix}
+        α \\
+        α
+      \end{pmatrix}
+      ,
+      \begin{pmatrix}
+        γ(x_3) \\
+        x_2
+      \end{pmatrix}
+      ,
+      \begin{pmatrix}
+        x_3 \\
+        x_3
+      \end{pmatrix}
+      \right\}
+    }
+    \\
+    \uncover<+->{
+      \Eliminate
+      &
+      \left\{
+      \begin{pmatrix}
+        x_1 \\
+        γ(x_2)
+      \end{pmatrix}
+      ,
+      \begin{pmatrix}
+        α \\
+        α
+      \end{pmatrix}
+      ,
+      \begin{pmatrix}
+        γ(x_3) \\
+        x_2
+      \end{pmatrix}
+      \right\}
+    }
+    \\
+    \uncover<+->{
+      \Decomposition
+      &
+      \left\{
+      \begin{pmatrix}
+        x_1 \\
+        γ(x_2)
+      \end{pmatrix}
+      ,
+      \begin{pmatrix}
+        γ(x_3) \\
+        x_2
+      \end{pmatrix}
+      \right\}
+    }
+    \\
+    \uncover<+->{
+      \Swap
+      &
+      \left\{
+      \begin{pmatrix}
+        x_1 \\
+        γ(x_2)
+      \end{pmatrix}
+      ,
+      \begin{pmatrix}
+        x_2    \\
+        γ(x_3)
+      \end{pmatrix}
+      \right\}
+    }
+  \end{align*}
+\end{frame}
+
+\begin{frame}{Aufgabe 1 (cont.)}
+  \begin{align*}
+    \uncover<+->{
+      &
+      \left\{
+      \begin{pmatrix}
+        x_1 \\
+        γ(x_2)
+      \end{pmatrix}
+      ,
+      \begin{pmatrix}
+        x_2    \\
+        γ(x_3)
+      \end{pmatrix}
+      \right\}
+    }
+    \\
+    \uncover<+->{
+      \Substitute
+      &
+      \left\{
+      \begin{pmatrix}
+        x_1 \\
+        γ(γ(x_3))
+      \end{pmatrix}
+      ,
+      \begin{pmatrix}
+        x_2    \\
+        γ(x_3)
+      \end{pmatrix}
+      \right\}
+    }
+  \end{align*}
+  \uncover<+->{
+    \begin{equation*}
+      \begin{matrix}
+        x_1 \mapsto γ(γ(x_3))
+        \qquad
+        &
+        x_2 \mapsto γ(x_3)
+        &
+        \qquad
+        x_3 \mapsto x_3
+      \end{matrix}
+    \end{equation*}
+  }
+\end{frame}
+
+\end{document}
