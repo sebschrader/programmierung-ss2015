@@ -77,4 +77,25 @@
   \end{align*}
 \end{frame}
 
+\begin{frame}{Aufgabe 4b (restliche Lösungen)}
+  \begin{equation*}
+    (λx.(λ y.(λz.z))) x (+ y 1) \Rightarrow^{*} (λz.z)
+  \end{equation*}
+
+  \begin{equation*}
+    (λx.(λ y.x (λz. y z))) (((λx.(λ y. y)) 8) (λx.(λ y. y) x)) \Rightarrow^{*} (λ y z. y z)
+  \end{equation*}
+
+  \begin{align*}
+          & (λh.(λx.h (x x)) (λx.h (x x))) ((λx.x) (+ 1 5)) \\
+    {}\Rightarrow^{*}{} & (λx. (+ 1 5) (x x)) (λx. (+ 1 5) (x x)) \\
+    {}\Rightarrow^{*}{} & (λx. (+ 1 5) ((λx. (+ 1 5) (x x)) (λx. (+ 1 5) (x x)))) \\
+    {}\Rightarrow^{*}{} & … \quad \text{(endlose Rekursion)}
+  \end{align*}
+
+  \begin{equation*}
+    (λ f .(λa.(λb. f a b))) (λx.(λ y.x)) \Rightarrow^{*} (λa.(λb.a))
+  \end{equation*}
+\end{frame}
+
 \end{document}
