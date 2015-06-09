@@ -1,0 +1,105 @@
+\documentclass[a4paper,10pt]{scrartcl}
+
+%\usepackage[ngerman]{babel}
+%\usepackage{unicode-math}
+%\usepackage[T1]{fontenc}
+%\usepackage{amsmath}
+%\usepackage{amsfonts}
+%\usepackage{stmaryrd}
+\usepackage{xparse}
+\usepackage{fontspec}
+\usepackage{amsmath}
+\usepackage{mathtools}
+\usepackage{unicode-math}
+%Hier stehen die Kopf und Fußzeilen
+
+\usepackage{scrpage2} 
+%\pagestyle{scrheadings} 
+
+%\ihead[scrplain-innen] {Peter Klausing}
+%\chead[scrplain-zentriert] {\rule[-1mm]{16cm}{0,21mm}}	
+%\ohead[scrplain-außen] {\today~-~Sommersemester 2015}
+%\cfoot[scrplain-zentriert] {\rule{16cm}{0,21mm} \\ \thepage}
+
+%\usepackage[doublespacing]{setspace}
+
+
+\NewDocumentCommand\alphaconversion{}{\Rightarrow_α}
+\NewDocumentCommand\betareduction{}{\Rightarrow_β}
+%\NewDocumentCommand\la {}{\la ngle}
+%\NewDocumentCommand\rangle{}{\ranglengle}
+
+
+
+%Seitenränder
+\usepackage{geometry}
+\geometry{a4paper, top=25mm, left=25mm, right=25mm, bottom=30mm}
+
+\title{- Übersicht Lambda-Kalkül -}
+\author{Peter Klausing}
+\date{\today}
+
+\begin{document}
+
+$λ$ bezeichnet die hier Menge aller Lambdaterme
+
+\section*{Applikation und Abstraktion}
+Applikation von $λ$-Terme: $t = t_{1}t_{2}$ mit $t_{1},t_{2} \in λ$
+Applikationen sind linksassoziativ: $t_1 t_2 t_3 = ((t_1 t_2) t_3)$\\
+Abstraktion von $λ$-Terme: $t = (λx.t_1)$ mit $t_1 \in λ$  \\
+Verschachtelte Abstraktionen können abgekürzt werden:\\
+$(λx_1.(λx_2.(λx_3.x_1 x_2 x_3))) = (λx_1 x_2 x_3.x_1 x_2 x_3)$
+
+\section*{gebundenne Variablen GV und freie Variablen FV}
+Sei $t \in λ$:
+\begin{itemize}
+  \item $t = x$ mit $x \in X$ (Menge der Variablen) $\Rightarrow$ $GV(t)=\emptyset $ und $FV(t)=\{x\}$
+  \item $t = t_1 t_2$ mit $t_1,t_2 \in λ$ $\Rightarrow$ $GV(t)=GV(t_1) \cup GV(t_2)$ und $FV(t)=FV(t_1) \cup FV(t_2)$
+  \item $t = (λx.t_1)$ mit $t_1 \in λ$ $\Rightarrow$ $GV(t)=\{x\} \cup GV{t_1}$ und $FV(t)=FV(t_1)/ \{x\}$
+\end{itemize}
+
+\section*{Substitution}
+$ t \left[ x / s \right] $ mit $t,s \in λ$ und $x \in X$: Substition aller frei Vorkommen von $x$ in $t$ durch $s$\\
+Bsp.: $(λx.xy(λy.y))\left[ y : (λz.z)\right] \Rightarrow (λx.x(λz.z)(λy.y))$
+
+\section*{$β$ - Reduktion}
+$β$ -Reduktion ist die Auflösung einer Applikation von einem Term $t_2$ auf einer Abstraktion $(λx.t_1)$.\\
+Voraussetzung: $GV(t_1) \cup FV(t_2) = \emptyset$.\\
+Es werden alle freien Vorkommen von $x$ in $t_1$ durch $t_2$ subtituiert.\\ 
+$\overbrace{\underbrace{(λx.t_1)}_{\text{Abstraktion}} t_2}^{\text{Applikation}} \betareduction t_1 \left[x / t_2\right]$ \\
+Zu beachten ist die implizite links Assozitivität
+\begin{itemize}
+  \item nicht $β$-reduzierbar da implizite Klammerung: $(x (λy.y) z )= ((x (λy.y)) z)$
+  \item innerhalb Abstraktion reduzierbar:
+  $(λx.(λy.yx)z) \betareduction (λx.(yx)\left[y/z\right]) \Rightarrow (λx.zx) $
+\end{itemize}
+
+\section*{$α$ - Konversion}
+Umbenennung einer gebundenen Variable in einem Term.\\
+$(λx.t_1) \alphaconversion (λx'.t_1\left[x/x'\right])$\\
+Vorraussetzung: $x'$ kommt nicht in $t_1$ vor
+
+\section*{Normalform}
+Normalform ist erreicht wenn keine weitere $β$-Reduktion mehr möglich ist.\\
+Es ist möglich mehrere $β$-Reduktionen auf einen $λ$-Term anzuwenden. Alle Folgen von $β$-Reduktionen ($\Rightarrow^{*}$) führen zur gleichen Normalform. (Konfluenz von $λ$-Termen)
+
+\newpage
+
+\section*{Zahlen, Funktionen und Wahrheitswerte im Lambda-Kalkül}
+\begin{itemize}
+  \item (Church) Zahlen: 
+  $\langle 0 \rangle = (λxy.y)$, $\langle 1\rangle = (λxy.xy)$, $\langle 2\rangle = (λxy.x(xy))$, $\ldots \langle n\rangle = (λxy.\underbrace{x(\cdots (x(x}_{n}y))\cdots))$
+  \item Wahrheitswerte: $\langle true\rangle = (λxy.x)$, $\langle false\rangle = (λxy.y)$
+  \item Nachfolgerfunktion: $\langle succ\rangle = (λz.(λxy.x(zxy)))$ Bsp: $\langle succ\rangle\langle n\rangle \Rightarrow^{*} \langle n +1 \rangle$
+  \item Vorgängerfunktion: $ \langle pred \rangle = (λk.k(λpu.u(\langle succ\rangle(p\langle true\rangle))(p\langle true\rangle))(λu.u\langle 0\rangle\langle 0\rangle) \langle false\rangle)$
+  \item Ist Null: $\langle iszero \rangle = (λk.k(\langle true\rangle \langle false\rangle )\langle true\rangle )$ Bsp: $\langle iszero\rangle \langle 0\rangle  = \langle true\rangle $
+  \item if-then-else: $\langle ite\rangle  = (λbxy.bxy)$\\
+  $\langle ite\rangle  b x y \Rightarrow \left\{\begin{matrix} x \textsf{ wenn } b \Rightarrow^{*} \langle true\rangle  \\ y \textsf{ sonst } \end{matrix}\right.$
+  \item Addition: $\langle Add\rangle  =(λzxy.\langle ite\rangle (\langle iszero\rangle x)y(\langle succ\rangle  (z(\langle pred\rangle x)y)))$\\
+  $\langle add\rangle  = \langle Y\rangle  \langle Add\rangle $
+  \item Multiplikation: $\langle Mult\rangle  = (λzxy.\langle ite\rangle (\langle iszero\rangle x)\langle 0\rangle (\langle add\rangle y(z(\langle pred\rangle x)y)))$\\
+  $\langle mult\rangle  = \langle Y\rangle \langle Mult\rangle $
+  
+  \item Fixpunktkombinator: $\langle Y\rangle = (λh.((λy.h(yy))(λy.h(yy)))) $
+\end{itemize}
+\end{document}
