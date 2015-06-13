@@ -64,7 +64,7 @@ Bsp.: $(λx.xy(λy.y))\left[ y : (λz.z)\right] \Rightarrow (λx.x(λz.z)(λy.y)
 
 \section*{$β$ - Reduktion}
 $β$ -Reduktion ist die Auflösung einer Applikation von einem Term $t_2$ auf einer Abstraktion $(λx.t_1)$.\\
-Voraussetzung: $GV(t_1) \cup FV(t_2) = \emptyset$.\\
+Voraussetzung: $GV(t_1) \cap FV(t_2) = \emptyset$.\\
 Es werden alle freien Vorkommen von $x$ in $t_1$ durch $t_2$ subtituiert.\\ 
 $\overbrace{\underbrace{(λx.t_1)}_{\text{Abstraktion}} t_2}^{\text{Applikation}} \betareduction t_1 \left[x / t_2\right]$ \\
 Zu beachten ist die implizite links Assozitivität
