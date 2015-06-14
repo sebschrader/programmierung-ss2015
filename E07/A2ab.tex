@@ -1,0 +1,46 @@
+\documentclass[t]{beamer}
+%NewComand definitions
+\usepackage{xparse}
+\usepackage{fontspec}
+\usepackage{amsmath}
+\usepackage{mathtools}
+\usepackage{unicode-math}
+\usepackage{listings}
+
+\NewDocumentCommand\FV{}{\alert<2>}
+\NewDocumentCommand\GV{}{\alert<3>}
+\NewDocumentCommand\alphaconversion{}{\Rightarrow_α}
+\NewDocumentCommand\betareduction{}{\Rightarrow_β}
+
+\begin{document}
+
+\begin{frame}{Aufgabe 02a}
+
+  \begin{gather*}
+    (λfx.\underbrace{fx}_{GV = \{f, x\}} )(\underbrace{λzy.xy}_{FV=\{x\}})x \\
+    \uncover<2->{
+      \alphaconversion (λfx'. \underbrace{fx'}_{GV=\{f,x'\}})(\underbrace{λzy.xy}_{FV=\{x\}})x \\    
+    }
+    \uncover<3->{
+      \betareduction (λx'. \underbrace{(λzy.xy)x'}_{GV=\{x'\}}) \underbrace{x}_{FV=\{x\}} \\
+    }
+    \uncover<4->{
+      \betareduction (λzx.\underbrace{xy}_{GV=\{y\}}) \underbrace{x}_{FV=\{x\}} \\
+    }
+    \uncover<5->{
+      \betareduction (λy.xy)
+    }
+  \end{gather*}
+\end{frame}
+
+\begin{frame}{Aufgabe 2b}
+  \frametitle{Aufgabe 2b}
+  \lstinputlisting[language=Haskell]{A2b.hs}
+$\langle G\rangle =  ( ( λgxy.\langle ite\rangle  (\langle iszero\rangle  y)$ \\
+$        ( \langle ite\rangle  (\langle iszero\rangle  (\langle pred\rangle  y))$ \\
+$          ( g (\langle succ\rangle  x)          (\langle pred\rangle  y))$ \\
+$          ( g (\langle succ\rangle  (\langle succ\rangle  x)) (\langle pred\rangle  (\langle pred\rangle  y)))$ \\
+$        )    $
+$      ) $
+\end{frame}
+\end{document}

@@ -1,0 +1,108 @@
+\documentclass[t]{beamer}
+\usepackage{xparse}
+\usepackage{fontspec}
+\usepackage{amsmath}
+\usepackage{mathtools}
+\usepackage{unicode-math}
+
+\NewDocumentCommand\FV{}{\alert<2>}
+\NewDocumentCommand\GV{}{\alert<3>}
+\NewDocumentCommand\alphaconversion{}{\Rightarrow_α}
+\NewDocumentCommand\betareduction{}{\Rightarrow_β}
+
+\begin{document}
+
+\begin{frame}{Aufgabe 1a}
+Für A soll gelten:
+  \begin{gather*}
+    A t s u \Rightarrow_{β}^{*} s \\
+    \uncover<2->{
+      A = λ x y z. y \\
+    }
+    \uncover<3->{
+      (λ x y z. y) t s u 
+    }
+    \uncover<4->{
+      \Rightarrow_{β}(λ y z. y) s u 
+    }
+    \uncover<5->{
+      \Rightarrow_{β} (λ z. s) u 
+    }
+    \uncover<6->{
+      \Rightarrow_{β} s 
+    }
+  \end{gather*}
+\end{frame}
+
+\begin{frame}{Aufgabe 1b}
+Für B soll gelten:
+  \begin{gather*}
+    B t s \Rightarrow_{β}^{*} s t \\
+    \uncover<2->{
+      B = λ x y. y x\\
+    }
+    \uncover<3->{
+      (λ x y. y x) t s 
+    }
+    \uncover<4->{
+      \Rightarrow_{β}(λ y. y t) s 
+    }
+    \uncover<5->{
+      \Rightarrow_{β} s t 
+    }
+  \end{gather*}
+\end{frame}
+
+\begin{frame}{Aufgabe 1c}
+Für C soll gelten:
+  \begin{gather*}
+    C C \Rightarrow_{β}^{*} C C \\
+    \uncover<2->{
+      C = λ x. x x\\
+    }
+    \uncover<3->{
+      (λ x. x x) (λ x. x x) 
+    }
+    \uncover<4->{
+      \Rightarrow_{β}(λ x x. x x) (λ x. x x)  
+    }
+  \end{gather*}
+\end{frame}
+
+\begin{frame}{Aufgabe 1d}
+Für D soll gelten:
+  \begin{gather*}
+    D \Rightarrow_{β}^{*} D \\
+    \uncover<2->{
+      D = C C\\
+    }
+    \uncover<3->{
+      (λ x. x x) (λ x. x x) 
+    }
+    \uncover<4->{
+      \Rightarrow_{β}(λ x. x x) (λ x. x x)  
+    }
+  \end{gather*}
+\end{frame}
+
+\begin{frame}{Aufgabe 1e}
+Für E soll gelten:
+  \begin{gather*}
+    E E t \Rightarrow_{β}^{*} E t E \\
+    \uncover<2->{
+      E = λxy.xyx \\
+    }
+    \uncover<3->{
+      (λ xy. x y x) (λ xy. x y x) t \\
+    }
+    \uncover<4->{
+      \Rightarrow_{β}(λy.(λxy.xyx)y(λxy.xyx))t \\
+    }
+    \uncover<5->{
+      \Rightarrow_{β}(λxy.xyx)t(λxy.xyx)\\
+    }
+  \end{gather*}
+\end{frame}
+
+
+\end{document}
