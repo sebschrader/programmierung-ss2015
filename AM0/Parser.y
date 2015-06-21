@@ -5,7 +5,7 @@ import Prelude hiding (LT,GT)
 import Control.Monad.Trans.Error(runErrorT)
 import AM0.Language
 import AM0.Lexer (Token(..), runLexer)
-import AM0.ParserMonad(ParserError(..), ParserMonad, getNextToken, throwParserError)
+import AM0.ParserMonad(ParserError(..), ParserMonad, Reason(..), getNextToken, throwParserError)
 }
 %name parse
 %tokentype { Token }
@@ -29,7 +29,7 @@ parseError tokens = throwParserError $ OtherError ("Parsing failed: " ++ show to
 
 runParser :: String -> Either ParserError [Instruction]
 runParser s = case runLexer s (runErrorT parse) of
-    Left  msg -> Left $ LexerError msg
+    Left  msg -> Left $ ParserError Nothing (LexerError msg)
     Right a   -> a
 
 zeroOperandInstruction :: String -> ParserMonad Instruction

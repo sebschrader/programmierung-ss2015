@@ -1,5 +1,6 @@
 {
-module AM0.Lexer (Lexer, Token(..), lexer, runLexer) where
+{-# OPTIONS_GHC -fno-warn-tabs #-}
+module AM0.Lexer (Lexer, Token(..), lexer, getPosition, runLexer) where
 }
 
 %wrapper "monad"
@@ -41,5 +42,11 @@ lexer = alexMonadScan
 
 runLexer :: String -> Lexer a -> Either String a
 runLexer = runAlex
+
+getPosition :: Lexer (Int, Int)
+getPosition = do
+    ((AlexPn _ line col), _, _, _) <- alexGetInput
+    return (line, col)
+
 }
 

@@ -1,18 +1,25 @@
 module AM0.ParserMonad where
 import Control.Monad.Trans.Class(lift)
-import Control.Monad.Trans.Error(Error, ErrorT, strMsg, throwError)
-import AM0.Lexer(Lexer, Token(..), lexer, runLexer)
+import Control.Monad.Trans.Error(Error, ErrorT, runErrorT, strMsg, throwError)
+import Data.List(intercalate)
+import AM0.Lexer(Lexer, Token(..), getPosition, lexer, runLexer)
 
+data Position = Position { getName :: String, getLine :: Int, getColumn :: Int }
 
-data ParserError = UnknownInstruction String        -- Name of the instruction
-                 | WrongOperandCount String Int Int -- expected count, got count
-                 | LexerError String                -- Error from the Lexer
-                 | OtherError String                -- Other error
+instance Show Position where
+    show (Position name line column) = intercalate ":" [name, show line, show column]
+
+data Reason = UnknownInstruction String        -- Name of the instruction
+            | WrongOperandCount String Int Int -- expected count, got count
+            | LexerError String                -- Error from the Lexer
+            | OtherError String                -- Other error
+
+data ParserError = ParserError (Maybe Position) Reason
 
 instance Error ParserError where
-    strMsg s = OtherError s
+    strMsg s = ParserError Nothing (OtherError s)
 
-instance Show ParserError where
+instance Show Reason where
     show (UnknownInstruction name)
         = "Unknown instruction: " ++ name
     show (WrongOperandCount name expected got)
@@ -20,13 +27,19 @@ instance Show ParserError where
     show (LexerError msg) = msg
     show (OtherError msg) = msg
 
+instance Show ParserError where
+    show (ParserError pos err) = case pos of
+        Nothing -> show err
+        Just p  -> show p ++ ": " ++ show err
+
 type ParserMonad = ErrorT ParserError Lexer
 
-throwParserError :: ParserError -> ParserMonad a
-throwParserError = throwError
+throwParserError :: Reason -> ParserMonad a
+throwParserError e = do
+    (line, column) <- lift getPosition
+    throwError $ ParserError (Just $ Position "test" line column) e
 
 getNextToken :: (Token -> ParserMonad a) -> ParserMonad a
 getNextToken cont = do
     t <- lift lexer
     cont t
-
