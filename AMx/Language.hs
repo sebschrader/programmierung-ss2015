@@ -1,5 +1,5 @@
 {-# LANGUAGE MagicHash #-}
-module AM0.Language where
+module AMx.Language where
 import Prelude hiding (EQ,LT,GT)
 import Data.Array.IArray(Array)
 

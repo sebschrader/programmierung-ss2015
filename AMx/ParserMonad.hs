@@ -1,8 +1,8 @@
-module AM0.ParserMonad where
+module AMx.ParserMonad where
 import Control.Monad.Trans.Class(lift)
 import Control.Monad.Trans.Error(Error, ErrorT, runErrorT, strMsg, throwError)
 import Data.List(intercalate)
-import AM0.Lexer(Lexer, Token(..), getPosition, lexer, runLexer)
+import AMx.Lexer(Lexer, Token(..), getPosition, lexer, runLexer)
 
 data Position = Position { getName :: String, getLine :: Int, getColumn :: Int }
 

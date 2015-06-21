@@ -1,6 +1,6 @@
 {
 {-# OPTIONS_GHC -fno-warn-tabs #-}
-module AM0.Lexer (Lexer, Token(..), lexer, getPosition, runLexer) where
+module AMx.Lexer (Lexer, Token(..), lexer, getPosition, runLexer) where
 }
 
 %wrapper "monad"

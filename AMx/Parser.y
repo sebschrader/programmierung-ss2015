@@ -2,15 +2,15 @@
 {-# LANGUAGE MagicHash #-}
 {-# LANGUAGE GADTs #-}
 {-# LANGUAGE ExistentialQuantification #-}
-module AM0.Parser(runParser) where
+module AMx.Parser(runParser) where
 import Prelude hiding (LT,GT)
 import Control.Monad.Trans.Error(runErrorT)
 import Data.Char(toUpper)
 import Data.Map.Strict(Map)
 import qualified Data.Map.Strict as Map
-import AM0.Language
-import AM0.Lexer (Token(..), runLexer)
-import AM0.ParserMonad(ParserError(..), ParserMonad, Reason(..), getNextToken, throwParserError)
+import AMx.Language
+import AMx.Lexer (Token(..), runLexer)
+import AMx.ParserMonad(ParserError(..), ParserMonad, Reason(..), getNextToken, throwParserError)
 }
 %name parse
 %tokentype { Token }

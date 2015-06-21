@@ -1,8 +1,8 @@
 {-# LANGUAGE CPP #-}
-{-# LINE 1 "AM0/Lexer.x" #-}
+{-# LINE 1 "AMx/Lexer.x" #-}
 
 {-# OPTIONS_GHC -fno-warn-tabs #-}
-module AM0.Lexer (Lexer, Token(..), lexer, getPosition, runLexer) where
+module AMx.Lexer (Lexer, Token(..), lexer, getPosition, runLexer) where
 
 #if __GLASGOW_HASKELL__ >= 603
 #include "ghcconfig.h"
@@ -341,7 +341,7 @@ alex_deflt :: Array Int Int
 alex_deflt = listArray (0,5) [-1,-1,-1,-1,-1,-1]
 
 alex_accept = listArray (0::Int,5) [AlexAccNone,AlexAcc (alex_action_0),AlexAcc (alex_action_1),AlexAccSkip,AlexAcc (alex_action_3),AlexAcc (alex_action_4)]
-{-# LINE 19 "AM0/Lexer.x" #-}
+{-# LINE 19 "AMx/Lexer.x" #-}
 
 
 mkToken :: Token -> AlexInput -> Int -> Alex Token

@@ -1,4 +1,4 @@
-module AM0.Interpreter where
+module AMx.Interpreter where
 import Prelude hiding (EQ,LT,GT)
 import qualified Data.Array.IArray as Array
 import qualified Data.IntMap.Strict as IntMap
@@ -9,8 +9,8 @@ import Control.Monad.Trans.Writer(Writer, tell, execWriter)
 import Numeric(readDec)
 import System.Environment(getArgs)
 import System.Exit(ExitCode(..), exitWith)
-import AM0.Language
-import AM0.Parser(runParser)
+import AMx.Language
+import AMx.Parser(runParser)
 
 type Address = Int
 type Value = Int
