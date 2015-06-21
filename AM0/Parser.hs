@@ -1,11 +1,11 @@
 {-# OPTIONS_GHC -w #-}
 {-# LANGUAGE MagicHash #-}
-module AM0.Parser where
+module AM0.Parser(runParser) where
 import Prelude hiding (LT,GT)
-import Control.Monad.Trans.Except(throwE)
+import Control.Monad.Trans.Error(runErrorT)
 import AM0.Language
-import AM0.Lexer (Token(..))
-import AM0.ParserMonad(ParserError(..), ParserMonad, getNextToken)
+import AM0.Lexer (Token(..), runLexer)
+import AM0.ParserMonad(ParserError(..), ParserMonad, getNextToken, throwParserError)
 import Control.Applicative(Applicative(..))
 import Control.Monad (ap)
 
@@ -129,7 +129,12 @@ parse = happySomeParser where
 happySeq = happyDontSeq
 
 
-parseError tokens = throwE $ OtherError ("Parsing failed: " ++ show tokens)
+parseError tokens = throwParserError $ OtherError ("Parsing failed: " ++ show tokens)
+
+runParser :: String -> Either ParserError [Instruction]
+runParser s = case runLexer s (runErrorT parse) of
+    Left  msg -> Left $ LexerError msg
+    Right a   -> a
 
 zeroOperandInstruction :: String -> ParserMonad Instruction
 zeroOperandInstruction "ADD" = return ADD
@@ -141,7 +146,7 @@ zeroOperandInstruction "LE"  = return LE
 zeroOperandInstruction "LT"  = return LT
 zeroOperandInstruction "GE"  = return GE
 zeroOperandInstruction "GT"  = return GT
-zeroOperandInstruction name  = throwE $ UnknownInstruction name
+zeroOperandInstruction name  = throwParserError $ UnknownInstruction name
 
 singleOperandInstruction :: String -> Int -> ParserMonad Instruction
 singleOperandInstruction "READ"  n = return $ READ (n-1)
@@ -151,7 +156,7 @@ singleOperandInstruction "LOAD"  n = return $ LOAD (n-1)
 singleOperandInstruction "STORE" n = return $ STORE (n-1)
 singleOperandInstruction "JMP"   n = return $ JMP (n-1)
 singleOperandInstruction "JMC"   n = return $ JMC (n-1)
-singleOperandInstruction name    _ = throwE $ UnknownInstruction name
+singleOperandInstruction name    _ = throwParserError $ UnknownInstruction name
 {-# LINE 1 "templates/GenericTemplate.hs" #-}
 {-# LINE 1 "templates/GenericTemplate.hs" #-}
 {-# LINE 1 "<built-in>" #-}

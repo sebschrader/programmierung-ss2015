@@ -4,14 +4,13 @@ import qualified Data.Array.IArray as Array
 import qualified Data.IntMap.Strict as IntMap
 import Data.List(intercalate)
 import Control.Monad.Trans.Class(lift)
-import Control.Monad.Trans.Except(Except, catchE, throwE, runExcept, runExceptT)
+import Control.Monad.Trans.Error(ErrorT, catchError, throwError, runErrorT)
 import Control.Monad.Trans.Writer(Writer, tell, execWriter)
 import Numeric(readDec)
 import System.Environment(getArgs)
 import System.Exit(ExitCode(..), exitWith)
 import AM0.Language
-import AM0.Lexer(runLexer)
-import AM0.Parser(parse)
+import AM0.Parser(runParser)
 
 type Address = Int
 type Value = Int
@@ -70,10 +69,9 @@ runFile :: FilePath -> [String] -> IO ()
 runFile fp inp = do
     s <- readFile fp
     inps <- readInputs inp
-    case runLexer s (runExceptT parse) of
-        Right (Right is) -> run (fromInstructions is) inps
-        Right (Left e)   -> putStrLn $ "Parse error: " ++ show e
-        Left  s          -> putStrLn $ "Lex error " ++ s
+    case runParser s of
+        Left  e  -> putStrLn $ "Parse Error " ++ s
+        Right is -> run (fromInstructions is) inps
 
 fromInstructions :: [Instruction] -> Program
 fromInstructions is = Array.listArray (0, length is - 1) $ reverse is
@@ -98,9 +96,9 @@ interpretStepwise prog conf = do
         tell [conf]
         if ip >= l && ip <= h
             then do
-                case runExcept $ execute (prog Array.! ip) conf of
-                    Left  exc  -> return $ ErrorResult exc
-                    Right next -> interpretStepwise prog next
+                case execute (prog Array.! ip) conf of
+                    Left  next -> interpretStepwise prog next
+                    Right exc  -> return $ ErrorResult exc
             else return $ SuccessResult conf
     where
         (l, h) = Array.bounds prog
@@ -114,22 +112,22 @@ memoryUpdate :: Address -> Value -> Memory -> Memory
 memoryUpdate = IntMap.insert
 
 
-execute :: Instruction -> Configuration -> Except Exception Configuration
+execute :: Instruction -> Configuration -> Either Configuration Exception
 -- Load/Store instructions
 execute (READ  n) (Configuration ip stack mem inp out)
     = case inp of
-        []   -> throwE EmptyInput
-        i:is -> return $ Configuration (ip + 1) stack (memoryUpdate n i mem) is out
+        []   -> Right EmptyInput
+        i:is -> Left $ Configuration (ip + 1) stack (memoryUpdate n i mem) is out
 execute (WRITE n) (Configuration ip stack mem inp out)
-    = return $ Configuration (ip + 1) stack mem inp (memoryLookup n mem : out)
+    = Left $ Configuration (ip + 1) stack mem inp (memoryLookup n mem : out)
 execute (LIT   n) (Configuration ip stack mem inp out)
-    = return $ Configuration (ip + 1) (n : stack) mem inp out
+    = Left $ Configuration (ip + 1) (n : stack) mem inp out
 execute (LOAD  n) (Configuration ip stack mem inp out)
-    = return $ Configuration (ip + 1) (memoryLookup n mem : stack) mem inp out
+    = Left $ Configuration (ip + 1) (memoryLookup n mem : stack) mem inp out
 execute (STORE n) (Configuration ip stack mem inp out)
     = case stack of
-        []   -> throwE EmptyStack
-        a:as -> return $ Configuration (ip + 1) as (memoryUpdate n a mem) inp out
+        []   -> Right EmptyStack
+        a:as -> Left $ Configuration (ip + 1) as (memoryUpdate n a mem) inp out
 -- Arithmetic and logical instructions
 execute ADD conf = executeStackOperation (+) conf
 execute SUB conf = executeStackOperation (-) conf
@@ -143,16 +141,16 @@ execute GE  conf = executeStackOperation ((fromEnum .) . (>=)) conf
 execute GT  conf = executeStackOperation ((fromEnum .) . (>))  conf
 -- Control flow instructions
 execute (JMP n) (Configuration ip stack mem inp out)
-    = return $ Configuration n stack mem inp out
+    = Left $ Configuration n stack mem inp out
 execute (JMC n) (Configuration ip stack mem inp out)
     = case stack of
-        []   -> throwE EmptyStack
-        0:as -> return $ Configuration n        as mem inp out
-        _:as -> return $ Configuration (ip + 1) as mem inp out
+        []   -> Right EmptyStack
+        0:as -> Left $ Configuration n        as mem inp out
+        _:as -> Left $ Configuration (ip + 1) as mem inp out
 
-executeStackOperation :: (Value -> Value -> Value) -> Configuration -> Except Exception Configuration
+executeStackOperation :: (Value -> Value -> Value) -> Configuration -> Either Configuration Exception
 executeStackOperation f (Configuration ip stack mem inp out)
     = case stack of
-        []     -> throwE EmptyStack
-        _:[]   -> throwE EmptyStack
-        a:b:cs -> return $ Configuration (ip + 1) (f b a : cs) mem inp out
+        []     -> Right EmptyStack
+        _:[]   -> Right EmptyStack
+        a:b:cs -> Left $ Configuration (ip + 1) (f b a : cs) mem inp out
