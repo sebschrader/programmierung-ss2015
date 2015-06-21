@@ -1,0 +1,11 @@
+READ 1;
+LOAD 1;
+LIT 1;
+GT;
+JMC;
+LOAD 1;
+LIT 2;
+DIV;
+STORE 1;
+WRITE 1;
+JMP 2;
