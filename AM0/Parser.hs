@@ -1,58 +1,107 @@
 {-# OPTIONS_GHC -w #-}
 {-# LANGUAGE MagicHash #-}
+{-# LANGUAGE GADTs #-}
+{-# LANGUAGE ExistentialQuantification #-}
 module AM0.Parser(runParser) where
 import Prelude hiding (LT,GT)
 import Control.Monad.Trans.Error(runErrorT)
+import Data.Char(toUpper)
+import Data.Map.Strict(Map)
+import qualified Data.Map.Strict as Map
 import AM0.Language
 import AM0.Lexer (Token(..), runLexer)
-import AM0.ParserMonad(ParserError(..), ParserMonad, getNextToken, throwParserError)
+import AM0.ParserMonad(ParserError(..), ParserMonad, Reason(..), getNextToken, throwParserError)
 import Control.Applicative(Applicative(..))
 import Control.Monad (ap)
 
 -- parser produced by Happy Version 1.19.5
 
-data HappyAbsSyn t4 t5 t6
+data HappyAbsSyn t4 t5 t6 t7 t8 t9 t10
 	= HappyTerminal (Token)
 	| HappyErrorToken Int
 	| HappyAbsSyn4 t4
 	| HappyAbsSyn5 t5
 	| HappyAbsSyn6 t6
+	| HappyAbsSyn7 t7
+	| HappyAbsSyn8 t8
+	| HappyAbsSyn9 t9
+	| HappyAbsSyn10 t10
 
 action_0 (4) = happyGoto action_2
 action_0 _ = happyReduce_1
 
 action_1 _ = happyFail
 
-action_2 (9) = happyShift action_5
-action_2 (10) = happyShift action_6
-action_2 (11) = happyAccept
+action_2 (16) = happyShift action_5
+action_2 (17) = happyShift action_6
+action_2 (18) = happyAccept
 action_2 (5) = happyGoto action_3
 action_2 (6) = happyGoto action_4
 action_2 _ = happyFail
 
 action_3 _ = happyReduce_2
 
-action_4 (8) = happyShift action_9
+action_4 (14) = happyShift action_15
+action_4 (10) = happyGoto action_14
 action_4 _ = happyFail
 
-action_5 (7) = happyShift action_8
+action_5 (13) = happyShift action_13
 action_5 _ = happyFail
 
-action_6 (9) = happyShift action_7
-action_6 _ = happyReduce_5
+action_6 (11) = happyShift action_10
+action_6 (16) = happyShift action_11
+action_6 (17) = happyShift action_12
+action_6 (7) = happyGoto action_7
+action_6 (8) = happyGoto action_8
+action_6 (9) = happyGoto action_9
+action_6 _ = happyReduce_8
 
-action_7 _ = happyReduce_6
+action_7 _ = happyReduce_5
 
-action_8 (10) = happyShift action_6
-action_8 (6) = happyGoto action_10
-action_8 _ = happyFail
+action_8 _ = happyReduce_7
 
-action_9 _ = happyReduce_4
+action_9 (15) = happyShift action_19
+action_9 _ = happyReduce_9
 
-action_10 (8) = happyShift action_11
-action_10 _ = happyFail
+action_10 (16) = happyShift action_11
+action_10 (17) = happyShift action_12
+action_10 (8) = happyGoto action_18
+action_10 (9) = happyGoto action_9
+action_10 _ = happyReduce_8
 
-action_11 _ = happyReduce_3
+action_11 _ = happyReduce_11
+
+action_12 _ = happyReduce_12
+
+action_13 (17) = happyShift action_6
+action_13 (6) = happyGoto action_17
+action_13 _ = happyFail
+
+action_14 (14) = happyShift action_16
+action_14 _ = happyReduce_4
+
+action_15 _ = happyReduce_13
+
+action_16 _ = happyReduce_14
+
+action_17 (14) = happyShift action_15
+action_17 (10) = happyGoto action_22
+action_17 _ = happyFail
+
+action_18 (12) = happyShift action_21
+action_18 _ = happyFail
+
+action_19 (16) = happyShift action_11
+action_19 (17) = happyShift action_12
+action_19 (9) = happyGoto action_20
+action_19 _ = happyFail
+
+action_20 _ = happyReduce_10
+
+action_21 _ = happyReduce_6
+
+action_22 (14) = happyShift action_16
+action_22 _ = happyReduce_3
 
 happyReduce_1 = happySpecReduce_0  4 happyReduction_1
 happyReduction_1  =  HappyAbsSyn4
@@ -85,32 +134,93 @@ happyReduction_4 _
 	)
 happyReduction_4 _ _  = notHappyAtAll 
 
-happyReduce_5 = happyMonadReduce 1 6 happyReduction_5
-happyReduction_5 ((HappyTerminal (TokenName happy_var_1)) `HappyStk`
-	happyRest) tk
-	 = happyThen (( zeroOperandInstruction happy_var_1)
-	) (\r -> happyReturn (HappyAbsSyn6 r))
-
-happyReduce_6 = happyMonadReduce 2 6 happyReduction_6
-happyReduction_6 ((HappyTerminal (TokenInt happy_var_2)) `HappyStk`
+happyReduce_5 = happyMonadReduce 2 6 happyReduction_5
+happyReduction_5 ((HappyAbsSyn7  happy_var_2) `HappyStk`
 	(HappyTerminal (TokenName happy_var_1)) `HappyStk`
 	happyRest) tk
-	 = happyThen (( singleOperandInstruction happy_var_1 happy_var_2)
+	 = happyThen (( getSpecification happy_var_1 >>= happy_var_2)
 	) (\r -> happyReturn (HappyAbsSyn6 r))
+
+happyReduce_6 = happySpecReduce_3  7 happyReduction_6
+happyReduction_6 _
+	(HappyAbsSyn8  happy_var_2)
+	_
+	 =  HappyAbsSyn7
+		 (happy_var_2
+	)
+happyReduction_6 _ _ _  = notHappyAtAll 
+
+happyReduce_7 = happySpecReduce_1  7 happyReduction_7
+happyReduction_7 (HappyAbsSyn8  happy_var_1)
+	 =  HappyAbsSyn7
+		 (happy_var_1
+	)
+happyReduction_7 _  = notHappyAtAll 
+
+happyReduce_8 = happySpecReduce_0  8 happyReduction_8
+happyReduction_8  =  HappyAbsSyn8
+		 (checkNullaryInstruction
+	)
+
+happyReduce_9 = happySpecReduce_1  8 happyReduction_9
+happyReduction_9 (HappyAbsSyn9  happy_var_1)
+	 =  HappyAbsSyn8
+		 (checkUnaryInstruction happy_var_1
+	)
+happyReduction_9 _  = notHappyAtAll 
+
+happyReduce_10 = happySpecReduce_3  8 happyReduction_10
+happyReduction_10 (HappyAbsSyn9  happy_var_3)
+	_
+	(HappyAbsSyn9  happy_var_1)
+	 =  HappyAbsSyn8
+		 (checkBinaryInstruction happy_var_1 happy_var_3
+	)
+happyReduction_10 _ _ _  = notHappyAtAll 
+
+happyReduce_11 = happySpecReduce_1  9 happyReduction_11
+happyReduction_11 (HappyTerminal (TokenInt happy_var_1))
+	 =  HappyAbsSyn9
+		 (IntArgument happy_var_1
+	)
+happyReduction_11 _  = notHappyAtAll 
+
+happyReduce_12 = happySpecReduce_1  9 happyReduction_12
+happyReduction_12 (HappyTerminal (TokenName happy_var_1))
+	 =  HappyAbsSyn9
+		 (StringArgument happy_var_1
+	)
+happyReduction_12 _  = notHappyAtAll 
+
+happyReduce_13 = happySpecReduce_1  10 happyReduction_13
+happyReduction_13 _
+	 =  HappyAbsSyn10
+		 (()
+	)
+
+happyReduce_14 = happySpecReduce_2  10 happyReduction_14
+happyReduction_14 _
+	_
+	 =  HappyAbsSyn10
+		 (()
+	)
 
 happyNewToken action sts stk
 	= getNextToken(\tk -> 
 	let cont i = action i i tk (HappyState action) sts stk in
 	case tk of {
-	TokenEOF -> action 11 11 tk (HappyState action) sts stk;
-	TokenColon -> cont 7;
-	TokenSemicolon -> cont 8;
-	TokenInt happy_dollar_dollar -> cont 9;
-	TokenName happy_dollar_dollar -> cont 10;
+	TokenEOF -> action 18 18 tk (HappyState action) sts stk;
+	TokenOpenParenthesis -> cont 11;
+	TokenCloseParenthesis -> cont 12;
+	TokenColon -> cont 13;
+	TokenSeparator -> cont 14;
+	TokenComma -> cont 15;
+	TokenInt happy_dollar_dollar -> cont 16;
+	TokenName happy_dollar_dollar -> cont 17;
 	_ -> happyError' tk
 	})
 
-happyError_ 11 tk = happyError' tk
+happyError_ 18 tk = happyError' tk
 happyError_ _ tk = happyError' tk
 
 happyThen :: () => ParserMonad a -> (a -> ParserMonad b) -> ParserMonad b
@@ -133,30 +243,73 @@ parseError tokens = throwParserError $ OtherError ("Parsing failed: " ++ show to
 
 runParser :: String -> Either ParserError [Instruction]
 runParser s = case runLexer s (runErrorT parse) of
-    Left  msg -> Left $ LexerError msg
+    Left  msg -> Left $ ParserError Nothing (LexerError msg)
     Right a   -> a
 
-zeroOperandInstruction :: String -> ParserMonad Instruction
-zeroOperandInstruction "ADD" = return ADD
-zeroOperandInstruction "SUB" = return SUB
-zeroOperandInstruction "MUL" = return MUL
-zeroOperandInstruction "DIV" = return DIV
-zeroOperandInstruction "MOD" = return MOD
-zeroOperandInstruction "LE"  = return LE
-zeroOperandInstruction "LT"  = return LT
-zeroOperandInstruction "GE"  = return GE
-zeroOperandInstruction "GT"  = return GT
-zeroOperandInstruction name  = throwParserError $ UnknownInstruction name
+data InstructionSpecification where
+    Nullary :: String -> Instruction -> InstructionSpecification
+    Unary :: forall a . String -> (a -> Instruction) -> (Type a) -> InstructionSpecification
+    Binary :: forall a b . String -> (a -> b -> Instruction) -> (Type a) -> (Type b) -> InstructionSpecification
 
-singleOperandInstruction :: String -> Int -> ParserMonad Instruction
-singleOperandInstruction "READ"  n = return $ READ (n-1)
-singleOperandInstruction "WRITE" n = return $ WRITE (n-1)
-singleOperandInstruction "LIT"   n = return $ LIT n
-singleOperandInstruction "LOAD"  n = return $ LOAD (n-1)
-singleOperandInstruction "STORE" n = return $ STORE (n-1)
-singleOperandInstruction "JMP"   n = return $ JMP (n-1)
-singleOperandInstruction "JMC"   n = return $ JMC (n-1)
-singleOperandInstruction name    _ = throwParserError $ UnknownInstruction name
+data Argument = IntArgument Int | StringArgument String
+
+data Type a where
+    IntType :: Type Int
+    StringType :: Type String
+
+fromList :: [InstructionSpecification] -> Map String InstructionSpecification
+fromList = Map.fromList . map toTuple
+    where toTuple spec@(Nullary name _    ) = (name, spec)
+          toTuple spec@(Unary   name _ _  ) = (name, spec)
+          toTuple spec@(Binary  name _ _ _) = (name, spec)
+
+instructions :: Map String InstructionSpecification
+instructions = Map.fromList [ ("ADD", Nullary "ADD" ADD)
+                            , ("SUB", Nullary "SUB" SUB)
+                            , ("MUL", Nullary "MUL" MUL)
+                            , ("DIV", Nullary "DIV" DIV)
+                            , ("MOD", Nullary "MOD" MOD)
+                            , ("GE", Nullary "GE" GE)
+                            , ("GT", Nullary "GT" GT)
+                            , ("LE", Nullary "LE" LE)
+                            , ("LT", Nullary "LT" LT)
+                            , ("READ", Unary "READ" READ IntType)
+                            , ("WRITE", Unary "WRITE" WRITE IntType)
+                            , ("LOAD", Unary "LOAD" LOAD IntType)
+                            , ("STORE", Unary "STORE" STORE IntType)
+                            , ("LIT", Unary "LIT" LIT IntType)
+                            , ("JMP", Unary "JMP" JMP IntType)
+                            , ("JMC", Unary "JMC" JMC IntType)
+                            ]
+
+getSpecification :: String -> ParserMonad InstructionSpecification
+getSpecification name = case Map.lookup upper_name instructions of
+        Nothing   -> throwParserError $ UnknownInstruction upper_name
+        Just spec -> return spec
+    where upper_name = map toUpper name
+
+checkNullaryInstruction :: InstructionSpecification -> ParserMonad Instruction
+checkNullaryInstruction (Nullary _name f    ) = return f
+checkNullaryInstruction (Unary    name _ _  ) = throwParserError $ WrongOperandCount name 1 0
+checkNullaryInstruction (Binary   name _ _ _) = throwParserError $ WrongOperandCount name 2 0
+
+checkUnaryInstruction :: Argument -> InstructionSpecification -> ParserMonad Instruction
+checkUnaryInstruction _   (Nullary  name _    ) = throwParserError $ WrongOperandCount name 0 1
+checkUnaryInstruction arg (Unary   _name f t  ) = checkType arg t >>= \v -> return $ f v
+checkUnaryInstruction _   (Binary   name _ _ _) = throwParserError $ WrongOperandCount name 2 1
+
+checkBinaryInstruction :: Argument -> Argument -> InstructionSpecification -> ParserMonad Instruction
+checkBinaryInstruction _    _    (Nullary  name _            ) = throwParserError $ WrongOperandCount name 0 2
+checkBinaryInstruction _    _    (Unary    name _ _          ) = throwParserError $ WrongOperandCount name 1 2
+checkBinaryInstruction arg1 arg2 (Binary  _name f type1 type2) = do
+    value1 <- checkType arg1 type1
+    value2 <- checkType arg2 type2
+    return $ f value1 value2
+
+checkType :: Argument -> Type a -> ParserMonad a
+checkType (IntArgument i)    IntType    = return i
+checkType (StringArgument s) StringType = return s
+checkType _                  _          = throwParserError $ OtherError "Wrong type."
 {-# LINE 1 "templates/GenericTemplate.hs" #-}
 {-# LINE 1 "templates/GenericTemplate.hs" #-}
 {-# LINE 1 "<built-in>" #-}

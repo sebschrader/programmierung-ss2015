@@ -29,6 +29,9 @@ getName (_, _, _, s) n = return $ TokenName $ take n s
 
 data Token = TokenName String
            | TokenColon
+           | TokenComma
+           | TokenOpenParenthesis
+           | TokenCloseParenthesis
            | TokenSeparator
            | TokenInt Int
            | TokenEOF
