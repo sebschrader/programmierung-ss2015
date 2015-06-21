@@ -1,0 +1,23 @@
+
+
+
+
+
+
+
+
+
+LOAD 1;
+LOAD 2;
+LOAD 3;
+ADD;
+LE;
+JMC 23;
+LIT 0;
+LOAD 1;
+GT;
+JMC 22;
+WRITE 2;
+JMP 16;
+JMP 24;
+WRITE 1;
