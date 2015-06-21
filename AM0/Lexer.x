@@ -7,9 +7,11 @@ module AM0.Lexer (Lexer, Token(..), lexer, getPosition, runLexer) where
 
 $digit = [0-9]          -- digits
 $alpha = [a-zA-Z]       -- alphabetic characters
+$white = [\ \t\f\v]     -- whitespace
+$sep   = [\;\r\n]       -- instruction separators
 
 tokens :-
-  \;        { mkToken TokenSemicolon }
+  $sep+     { mkToken TokenSeparator }
   :         { mkToken TokenColon }
   $white+   ;
   $digit+   { getInteger }
@@ -27,7 +29,7 @@ getName (_, _, _, s) n = return $ TokenName $ take n s
 
 data Token = TokenName String
            | TokenColon
-           | TokenSemicolon
+           | TokenSeparator
            | TokenInt Int
            | TokenEOF
            deriving (Eq,Show)
