@@ -1,58 +1,104 @@
 {-# OPTIONS_GHC -w #-}
 {-# LANGUAGE MagicHash #-}
-module AM0.Parser where
-import Prelude hiding (LT,GT)
-import Control.Monad.Trans.Except(throwE)
-import AM0.Language
-import AM0.Lexer (Token(..))
-import AM0.ParserMonad(ParserError(..), ParserMonad, getNextToken)
+module AMx.Parser(runParser) where
+import Control.Monad.Trans.Error(runErrorT)
+import Control.Monad.Trans.Reader(runReaderT)
+import Data.Map.Strict(Map)
+import AMx.Language(Argument(..), InstructionSpecification, Program, programFromList)
+import AMx.Lexer (Token(..), runLexer)
+import AMx.ParserMonad(ParserError(..), ParserMonad, Reason(..), getNextToken, throwParserError)
+import AMx.TypeCheck
 import Control.Applicative(Applicative(..))
 import Control.Monad (ap)
 
 -- parser produced by Happy Version 1.19.5
 
-data HappyAbsSyn t4 t5 t6
+data HappyAbsSyn t4 t5 t6 t7 t8 t9 t10
 	= HappyTerminal (Token)
 	| HappyErrorToken Int
 	| HappyAbsSyn4 t4
 	| HappyAbsSyn5 t5
 	| HappyAbsSyn6 t6
+	| HappyAbsSyn7 t7
+	| HappyAbsSyn8 t8
+	| HappyAbsSyn9 t9
+	| HappyAbsSyn10 t10
 
 action_0 (4) = happyGoto action_2
 action_0 _ = happyReduce_1
 
 action_1 _ = happyFail
 
-action_2 (9) = happyShift action_5
-action_2 (10) = happyShift action_6
-action_2 (11) = happyAccept
+action_2 (16) = happyShift action_5
+action_2 (17) = happyShift action_6
+action_2 (18) = happyAccept
 action_2 (5) = happyGoto action_3
 action_2 (6) = happyGoto action_4
 action_2 _ = happyFail
 
 action_3 _ = happyReduce_2
 
-action_4 (8) = happyShift action_9
+action_4 (14) = happyShift action_15
+action_4 (10) = happyGoto action_14
 action_4 _ = happyFail
 
-action_5 (7) = happyShift action_8
+action_5 (13) = happyShift action_13
 action_5 _ = happyFail
 
-action_6 (9) = happyShift action_7
-action_6 _ = happyReduce_5
+action_6 (11) = happyShift action_10
+action_6 (16) = happyShift action_11
+action_6 (17) = happyShift action_12
+action_6 (7) = happyGoto action_7
+action_6 (8) = happyGoto action_8
+action_6 (9) = happyGoto action_9
+action_6 _ = happyReduce_8
 
-action_7 _ = happyReduce_6
+action_7 _ = happyReduce_5
 
-action_8 (10) = happyShift action_6
-action_8 (6) = happyGoto action_10
-action_8 _ = happyFail
+action_8 _ = happyReduce_7
 
-action_9 _ = happyReduce_4
+action_9 (15) = happyShift action_19
+action_9 _ = happyReduce_9
 
-action_10 (8) = happyShift action_11
-action_10 _ = happyFail
+action_10 (16) = happyShift action_11
+action_10 (17) = happyShift action_12
+action_10 (8) = happyGoto action_18
+action_10 (9) = happyGoto action_9
+action_10 _ = happyReduce_8
 
-action_11 _ = happyReduce_3
+action_11 _ = happyReduce_11
+
+action_12 _ = happyReduce_12
+
+action_13 (17) = happyShift action_6
+action_13 (6) = happyGoto action_17
+action_13 _ = happyFail
+
+action_14 (14) = happyShift action_16
+action_14 _ = happyReduce_4
+
+action_15 _ = happyReduce_13
+
+action_16 _ = happyReduce_14
+
+action_17 (14) = happyShift action_15
+action_17 (10) = happyGoto action_22
+action_17 _ = happyFail
+
+action_18 (12) = happyShift action_21
+action_18 _ = happyFail
+
+action_19 (16) = happyShift action_11
+action_19 (17) = happyShift action_12
+action_19 (9) = happyGoto action_20
+action_19 _ = happyFail
+
+action_20 _ = happyReduce_10
+
+action_21 _ = happyReduce_6
+
+action_22 (14) = happyShift action_16
+action_22 _ = happyReduce_3
 
 happyReduce_1 = happySpecReduce_0  4 happyReduction_1
 happyReduction_1  =  HappyAbsSyn4
@@ -85,73 +131,120 @@ happyReduction_4 _
 	)
 happyReduction_4 _ _  = notHappyAtAll 
 
-happyReduce_5 = happyMonadReduce 1 6 happyReduction_5
-happyReduction_5 ((HappyTerminal (TokenName happy_var_1)) `HappyStk`
-	happyRest) tk
-	 = happyThen (( zeroOperandInstruction happy_var_1)
-	) (\r -> happyReturn (HappyAbsSyn6 r))
-
-happyReduce_6 = happyMonadReduce 2 6 happyReduction_6
-happyReduction_6 ((HappyTerminal (TokenInt happy_var_2)) `HappyStk`
+happyReduce_5 = happyMonadReduce 2 6 happyReduction_5
+happyReduction_5 ((HappyAbsSyn7  happy_var_2) `HappyStk`
 	(HappyTerminal (TokenName happy_var_1)) `HappyStk`
 	happyRest) tk
-	 = happyThen (( singleOperandInstruction happy_var_1 happy_var_2)
+	 = happyThen (( getSpecification happy_var_1 >>= happy_var_2)
 	) (\r -> happyReturn (HappyAbsSyn6 r))
+
+happyReduce_6 = happySpecReduce_3  7 happyReduction_6
+happyReduction_6 _
+	(HappyAbsSyn8  happy_var_2)
+	_
+	 =  HappyAbsSyn7
+		 (happy_var_2
+	)
+happyReduction_6 _ _ _  = notHappyAtAll 
+
+happyReduce_7 = happySpecReduce_1  7 happyReduction_7
+happyReduction_7 (HappyAbsSyn8  happy_var_1)
+	 =  HappyAbsSyn7
+		 (happy_var_1
+	)
+happyReduction_7 _  = notHappyAtAll 
+
+happyReduce_8 = happySpecReduce_0  8 happyReduction_8
+happyReduction_8  =  HappyAbsSyn8
+		 (checkNullaryInstruction
+	)
+
+happyReduce_9 = happySpecReduce_1  8 happyReduction_9
+happyReduction_9 (HappyAbsSyn9  happy_var_1)
+	 =  HappyAbsSyn8
+		 (checkUnaryInstruction happy_var_1
+	)
+happyReduction_9 _  = notHappyAtAll 
+
+happyReduce_10 = happySpecReduce_3  8 happyReduction_10
+happyReduction_10 (HappyAbsSyn9  happy_var_3)
+	_
+	(HappyAbsSyn9  happy_var_1)
+	 =  HappyAbsSyn8
+		 (checkBinaryInstruction happy_var_1 happy_var_3
+	)
+happyReduction_10 _ _ _  = notHappyAtAll 
+
+happyReduce_11 = happySpecReduce_1  9 happyReduction_11
+happyReduction_11 (HappyTerminal (TokenInt happy_var_1))
+	 =  HappyAbsSyn9
+		 (IntArgument happy_var_1
+	)
+happyReduction_11 _  = notHappyAtAll 
+
+happyReduce_12 = happySpecReduce_1  9 happyReduction_12
+happyReduction_12 (HappyTerminal (TokenName happy_var_1))
+	 =  HappyAbsSyn9
+		 (StringArgument happy_var_1
+	)
+happyReduction_12 _  = notHappyAtAll 
+
+happyReduce_13 = happySpecReduce_1  10 happyReduction_13
+happyReduction_13 _
+	 =  HappyAbsSyn10
+		 (()
+	)
+
+happyReduce_14 = happySpecReduce_2  10 happyReduction_14
+happyReduction_14 _
+	_
+	 =  HappyAbsSyn10
+		 (()
+	)
 
 happyNewToken action sts stk
 	= getNextToken(\tk -> 
 	let cont i = action i i tk (HappyState action) sts stk in
 	case tk of {
-	TokenEOF -> action 11 11 tk (HappyState action) sts stk;
-	TokenColon -> cont 7;
-	TokenSemicolon -> cont 8;
-	TokenInt happy_dollar_dollar -> cont 9;
-	TokenName happy_dollar_dollar -> cont 10;
+	TokenEOF -> action 18 18 tk (HappyState action) sts stk;
+	TokenOpenParenthesis -> cont 11;
+	TokenCloseParenthesis -> cont 12;
+	TokenColon -> cont 13;
+	TokenSeparator -> cont 14;
+	TokenComma -> cont 15;
+	TokenInt happy_dollar_dollar -> cont 16;
+	TokenName happy_dollar_dollar -> cont 17;
 	_ -> happyError' tk
 	})
 
-happyError_ 11 tk = happyError' tk
+happyError_ 18 tk = happyError' tk
 happyError_ _ tk = happyError' tk
 
-happyThen :: () => ParserMonad a -> (a -> ParserMonad b) -> ParserMonad b
+happyThen :: () => ParserMonad i a -> (a -> ParserMonad i b) -> ParserMonad i b
 happyThen = (>>=)
-happyReturn :: () => a -> ParserMonad a
+happyReturn :: () => a -> ParserMonad i a
 happyReturn = (return)
 happyThen1 = happyThen
-happyReturn1 :: () => a -> ParserMonad a
+happyReturn1 :: () => a -> ParserMonad i a
 happyReturn1 = happyReturn
-happyError' :: () => (Token) -> ParserMonad a
+happyError' :: () => (Token) -> ParserMonad i a
 happyError' tk = parseError tk
 
-parse = happySomeParser where
+parse0 = happySomeParser where
   happySomeParser = happyThen (happyParse action_0) (\x -> case x of {HappyAbsSyn4 z -> happyReturn z; _other -> notHappyAtAll })
 
 happySeq = happyDontSeq
 
 
-parseError tokens = throwE $ OtherError ("Parsing failed: " ++ show tokens)
+parseError tokens = throwParserError $ OtherError ("Parsing failed: " ++ show tokens)
 
-zeroOperandInstruction :: String -> ParserMonad Instruction
-zeroOperandInstruction "ADD" = return ADD
-zeroOperandInstruction "SUB" = return SUB
-zeroOperandInstruction "MUL" = return MUL
-zeroOperandInstruction "DIV" = return DIV
-zeroOperandInstruction "MOD" = return MOD
-zeroOperandInstruction "LE"  = return LE
-zeroOperandInstruction "LT"  = return LT
-zeroOperandInstruction "GE"  = return GE
-zeroOperandInstruction "GT"  = return GT
-zeroOperandInstruction name  = throwE $ UnknownInstruction name
+parse :: ParserMonad i (Program i)
+parse = parse0 >>= return . programFromList . reverse
 
-singleOperandInstruction :: String -> Int -> ParserMonad Instruction
-singleOperandInstruction "READ"  n = return $ READ (n-1)
-singleOperandInstruction "WRITE" n = return $ WRITE (n-1)
-singleOperandInstruction "LIT"   n = return $ LIT n
-singleOperandInstruction "LOAD"  n = return $ LOAD (n-1)
-singleOperandInstruction "STORE" n = return $ STORE (n-1)
-singleOperandInstruction "JMP"   n = return $ JMP (n-1)
-singleOperandInstruction "JMC"   n = return $ JMC (n-1)
-singleOperandInstruction name    _ = throwE $ UnknownInstruction name
+runParser :: String -> Map String (InstructionSpecification i) -> Either ParserError (Program i)
+runParser s is = case runLexer s $ runReaderT (runErrorT parse) is of
+    Left  msg -> Left $ ParserError Nothing (LexerError msg)
+    Right a   -> a
 {-# LINE 1 "templates/GenericTemplate.hs" #-}
 {-# LINE 1 "templates/GenericTemplate.hs" #-}
 {-# LINE 1 "<built-in>" #-}
