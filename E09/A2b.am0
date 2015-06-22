@@ -1,16 +1,16 @@
-
-
-
-
-
-
-
-
-
+LIT 1;
+STORE 1;
+LIT 1;
+STORE 2;
+LIT 0;
+STORE 3;
+JMP 8;   
+JMP 9;   # NOP
+JMP 10;  # NOP
 LOAD 1;
 LOAD 2;
 LOAD 3;
-ADD;
+ADD;     #(13, 0 : 1 : 1, [1/1, 2/1, 3/0], ", ") 
 LE;
 JMC 23;
 LIT 0;
