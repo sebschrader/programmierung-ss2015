@@ -33,6 +33,7 @@ data Instruction = READ Address
                  | LT
                  | GE
                  | GT
+                 | NE
                  | JMP Address
                  | JMC Address
                  deriving (Show, Eq)
@@ -44,10 +45,12 @@ instructionSpecifications = fromList [ Nullary "ADD" ADD
                                      , Nullary "MUL" MUL
                                      , Nullary "DIV" DIV
                                      , Nullary "MOD" MOD
+                                     , Nullary "EQ" EQ
                                      , Nullary "GE" GE
                                      , Nullary "GT" GT
                                      , Nullary "LE" LE
                                      , Nullary "LT" LT
+                                     , Nullary "NE" NE
                                      , Unary "READ" READ IntType
                                      , Unary "WRITE" WRITE IntType
                                      , Unary "LOAD" LOAD IntType
@@ -135,6 +138,7 @@ execute LE  conf = executeStackOperation ((fromEnum .) . (<=)) conf
 execute LT  conf = executeStackOperation ((fromEnum .) . (<))  conf
 execute GE  conf = executeStackOperation ((fromEnum .) . (>=)) conf
 execute GT  conf = executeStackOperation ((fromEnum .) . (>))  conf
+execute NE  conf = executeStackOperation ((fromEnum .) . (/=)) conf
 -- Control flow instructions
 execute (JMP n) (Configuration ip stack mem inp out)
     = Left $ Configuration n stack mem inp out
