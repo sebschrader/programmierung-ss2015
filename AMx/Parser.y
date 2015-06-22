@@ -2,10 +2,10 @@
 {-# LANGUAGE MagicHash #-}
 module AMx.Parser(runParser) where
 import Control.Monad.Trans.Error(runErrorT)
+import AMx.Language(Argument(..), Instruction, InstructionSpecification)
 import AMx.Lexer (Token(..), runLexer)
-import AMx.TypeCheck
 import AMx.ParserMonad(ParserError(..), ParserMonad, Reason(..), getNextToken, throwParserError)
-import AMx.Language(Instruction)
+import AMx.TypeCheck
 }
 %name parse
 %tokentype { Token }

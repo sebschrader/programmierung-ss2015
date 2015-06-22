@@ -2,6 +2,7 @@ module AMx.ParserMonad where
 import Control.Monad.Trans.Class(lift)
 import Control.Monad.Trans.Error(Error, ErrorT, runErrorT, strMsg, throwError)
 import Data.List(intercalate)
+import AMx.Language
 import AMx.Lexer(Lexer, Token(..), getPosition, lexer, runLexer)
 
 data Position = Position { getName :: String, getLine :: Int, getColumn :: Int }
