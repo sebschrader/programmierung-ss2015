@@ -3,7 +3,8 @@
 module AMx.Parser(runParser) where
 import Control.Monad.Trans.Error(runErrorT)
 import Control.Monad.Trans.Reader(runReaderT)
-import AMx.Language(Argument(..), Instruction, InstructionSpecification)
+import Data.Map.Strict(Map)
+import AMx.Language(Argument(..), InstructionSpecification, Program, programFromList)
 import AMx.Lexer (Token(..), runLexer)
 import AMx.ParserMonad(ParserError(..), ParserMonad, Reason(..), getNextToken, throwParserError)
 import AMx.TypeCheck
@@ -219,17 +220,17 @@ happyNewToken action sts stk
 happyError_ 18 tk = happyError' tk
 happyError_ _ tk = happyError' tk
 
-happyThen :: () => ParserMonad a -> (a -> ParserMonad b) -> ParserMonad b
+happyThen :: () => ParserMonad i a -> (a -> ParserMonad i b) -> ParserMonad i b
 happyThen = (>>=)
-happyReturn :: () => a -> ParserMonad a
+happyReturn :: () => a -> ParserMonad i a
 happyReturn = (return)
 happyThen1 = happyThen
-happyReturn1 :: () => a -> ParserMonad a
+happyReturn1 :: () => a -> ParserMonad i a
 happyReturn1 = happyReturn
-happyError' :: () => (Token) -> ParserMonad a
+happyError' :: () => (Token) -> ParserMonad i a
 happyError' tk = parseError tk
 
-parse = happySomeParser where
+parse0 = happySomeParser where
   happySomeParser = happyThen (happyParse action_0) (\x -> case x of {HappyAbsSyn4 z -> happyReturn z; _other -> notHappyAtAll })
 
 happySeq = happyDontSeq
@@ -237,7 +238,10 @@ happySeq = happyDontSeq
 
 parseError tokens = throwParserError $ OtherError ("Parsing failed: " ++ show tokens)
 
-runParser :: String -> [InstructionSpecification] -> Either ParserError [Instruction]
+parse :: ParserMonad i (Program i)
+parse = parse0 >>= return . programFromList . reverse
+
+runParser :: String -> Map String (InstructionSpecification i) -> Either ParserError (Program i)
 runParser s is = case runLexer s $ runReaderT (runErrorT parse) is of
     Left  msg -> Left $ ParserError Nothing (LexerError msg)
     Right a   -> a

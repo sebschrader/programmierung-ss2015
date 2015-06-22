@@ -3,15 +3,16 @@
 module AMx.Parser(runParser) where
 import Control.Monad.Trans.Error(runErrorT)
 import Control.Monad.Trans.Reader(runReaderT)
-import AMx.Language(Argument(..), Instruction, InstructionSpecification)
+import Data.Map.Strict(Map)
+import AMx.Language(Argument(..), InstructionSpecification, Program, programFromList)
 import AMx.Lexer (Token(..), runLexer)
 import AMx.ParserMonad(ParserError(..), ParserMonad, Reason(..), getNextToken, throwParserError)
 import AMx.TypeCheck
 }
-%name parse
+%name parse0
 %tokentype { Token }
 %error { parseError }
-%monad { ParserMonad }
+%monad { ParserMonad i }
 %lexer { getNextToken } { TokenEOF }
 %token
   '('   { TokenOpenParenthesis }
@@ -39,7 +40,10 @@ Separators  : ';'                             { () }
 {
 parseError tokens = throwParserError $ OtherError ("Parsing failed: " ++ show tokens)
 
-runParser :: String -> [InstructionSpecification] -> Either ParserError [Instruction]
+parse :: ParserMonad i (Program i)
+parse = parse0 >>= return . programFromList . reverse
+
+runParser :: String -> Map String (InstructionSpecification i) -> Either ParserError (Program i)
 runParser s is = case runLexer s $ runReaderT (runErrorT parse) is of
     Left  msg -> Left $ ParserError Nothing (LexerError msg)
     Right a   -> a

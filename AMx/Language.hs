@@ -2,36 +2,17 @@
 {-# LANGUAGE GADTs #-}
 {-# LANGUAGE ExistentialQuantification #-}
 module AMx.Language where
-import Prelude hiding (EQ,LT,GT)
 import Data.Array.IArray(Array)
+import qualified Data.Array.IArray as Array
 import Data.Map.Strict(Map)
 import qualified Data.Map.Strict as Map
 
-data Instruction = READ Int
-                 | WRITE Int
-                 | LIT Int
-                 | LOAD Int
-                 | STORE Int
-                 | ADD
-                 | SUB
-                 | MUL
-                 | DIV
-                 | MOD
-                 | EQ
-                 | LE
-                 | LT
-                 | GE
-                 | GT
-                 | JMP Int
-                 | JMC Int
-                 deriving (Show, Eq)
+type Program i = Array Int i
 
-type Program = Array Int Instruction
-
-data InstructionSpecification where
-    Nullary :: String -> Instruction -> InstructionSpecification
-    Unary :: forall a . String -> (a -> Instruction) -> (Type a) -> InstructionSpecification
-    Binary :: forall a b . String -> (a -> b -> Instruction) -> (Type a) -> (Type b) -> InstructionSpecification
+data InstructionSpecification i where
+    Nullary :: String -> i -> InstructionSpecification i
+    Unary :: String -> (a -> i) -> (Type a) -> InstructionSpecification i
+    Binary :: String -> (a -> b -> i) -> (Type a) -> (Type b) -> InstructionSpecification i
 
 data Argument = IntArgument Int | StringArgument String
 
@@ -39,7 +20,16 @@ data Type a where
     IntType :: Type Int
     StringType :: Type String
 
-fromList :: [InstructionSpecification] -> Map String InstructionSpecification
+programFromList :: [i] -> Program i
+programFromList l = Array.listArray (0, length l - 1) l
+
+getInstruction :: Program i -> Int -> i
+getInstruction = (Array.!)
+
+programBounds :: Program i -> (Int, Int)
+programBounds = Array.bounds
+
+fromList :: [InstructionSpecification i] -> Map String (InstructionSpecification i)
 fromList = Map.fromList . map toTuple
     where toTuple spec@(Nullary name _    ) = (name, spec)
           toTuple spec@(Unary   name _ _  ) = (name, spec)
