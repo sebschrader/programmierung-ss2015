@@ -2,7 +2,7 @@ READ 1;
 LOAD 1;
 LIT 1;
 GT;
-JMC;
+JMC 12;
 LOAD 1;
 LIT 2;
 DIV;
