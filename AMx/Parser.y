@@ -2,6 +2,7 @@
 {-# LANGUAGE MagicHash #-}
 module AMx.Parser(runParser) where
 import Control.Monad.Trans.Error(runErrorT)
+import Control.Monad.Trans.Reader(runReaderT)
 import AMx.Language(Argument(..), Instruction, InstructionSpecification)
 import AMx.Lexer (Token(..), runLexer)
 import AMx.ParserMonad(ParserError(..), ParserMonad, Reason(..), getNextToken, throwParserError)
@@ -38,8 +39,8 @@ Separators  : ';'                             { () }
 {
 parseError tokens = throwParserError $ OtherError ("Parsing failed: " ++ show tokens)
 
-runParser :: String -> Either ParserError [Instruction]
-runParser s = case runLexer s (runErrorT parse) of
+runParser :: String -> [InstructionSpecification] -> Either ParserError [Instruction]
+runParser s is = case runLexer s $ runReaderT (runErrorT parse) is of
     Left  msg -> Left $ ParserError Nothing (LexerError msg)
     Right a   -> a
 }

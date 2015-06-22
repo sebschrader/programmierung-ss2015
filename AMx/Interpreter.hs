@@ -69,7 +69,7 @@ runFile :: FilePath -> [String] -> IO ()
 runFile fp inp = do
     s <- readFile fp
     inps <- readInputs inp
-    case runParser s of
+    case runParser s [] of
         Left  e  -> putStrLn $ "Parse Error " ++ s
         Right is -> run (fromInstructions is) inps
 

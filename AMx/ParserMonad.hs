@@ -1,6 +1,7 @@
 module AMx.ParserMonad where
 import Control.Monad.Trans.Class(lift)
 import Control.Monad.Trans.Error(Error, ErrorT, runErrorT, strMsg, throwError)
+import Control.Monad.Trans.Reader(ReaderT)
 import Data.List(intercalate)
 import AMx.Language
 import AMx.Lexer(Lexer, Token(..), getPosition, lexer, runLexer)
@@ -33,14 +34,14 @@ instance Show ParserError where
         Nothing -> show err
         Just p  -> show p ++ ": " ++ show err
 
-type ParserMonad = ErrorT ParserError Lexer
+type ParserMonad = ErrorT ParserError (ReaderT [InstructionSpecification] Lexer)
 
 throwParserError :: Reason -> ParserMonad a
 throwParserError e = do
-    (line, column) <- lift getPosition
+    (line, column) <- lift $ lift getPosition
     throwError $ ParserError (Just $ Position "test" line column) e
 
 getNextToken :: (Token -> ParserMonad a) -> ParserMonad a
 getNextToken cont = do
-    t <- lift lexer
+    t <- lift $ lift lexer
     cont t
