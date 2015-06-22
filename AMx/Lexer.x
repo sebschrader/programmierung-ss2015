@@ -11,11 +11,14 @@ $white = [\ \t\f\v]     -- whitespace
 $sep   = [\;\r\n]       -- instruction separators
 
 tokens :-
-  $sep+     { mkToken TokenSeparator }
-  :         { mkToken TokenColon }
-  $white+   ;
-  $digit+   { getInteger }
-  $alpha+   { getName }
+  <0> $sep+     { mkToken TokenSeparator }
+  <0> :         { mkToken TokenColon }
+  <0> $white+   ;
+  <0> $digit+   { getInteger }
+  <0> $alpha+   { getName }
+  <0> \#        { begin comment }
+  <comment> [^\r\n] ;
+  <comment> [\r\n]  { mkToken TokenSeparator `andBegin` 0 }
 {
 
 mkToken :: Token -> AlexInput -> Int -> Alex Token
