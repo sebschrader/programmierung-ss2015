@@ -1,0 +1,13 @@
+#include <stdio.h>
+
+int main(){
+  int a, b, max;
+  scanf("%i", &a);
+  scanf("%i", &b);
+  if(a > b)
+    max = a;
+  else
+    max = b;
+  printf("%d", max);
+  return 0;
+}
