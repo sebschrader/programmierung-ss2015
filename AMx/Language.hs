@@ -21,7 +21,7 @@ data Type a where
     StringType :: Type String
 
 programFromList :: [i] -> Program i
-programFromList l = Array.listArray (0, length l - 1) l
+programFromList l = Array.listArray (1, length l) l
 
 getInstruction :: Program i -> Int -> i
 getInstruction = (Array.!)

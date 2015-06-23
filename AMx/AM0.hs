@@ -96,7 +96,7 @@ run :: Program Instruction -> Input -> IO ()
 run prog inp = interpret prog inp
 
 interpret :: Program Instruction -> Input -> IO ()
-interpret prog inp = interpretStepwise prog (Configuration 0 [] IntMap.empty inp []);
+interpret prog inp = interpretStepwise prog (Configuration 1 [] IntMap.empty inp []);
 
 interpretStepwise :: Program Instruction -> Configuration -> IO ()
 interpretStepwise prog conf = do
@@ -141,11 +141,11 @@ execute GT  conf = executeStackOperation ((fromEnum .) . (>))  conf
 execute NE  conf = executeStackOperation ((fromEnum .) . (/=)) conf
 -- Control flow instructions
 execute (JMP n) (Configuration ip stack mem inp out)
-    = Left $ Configuration (n - 1) stack mem inp out
+    = Left $ Configuration n stack mem inp out
 execute (JMC n) (Configuration ip stack mem inp out)
     = case stack of
         []   -> Right EmptyStack
-        0:as -> Left $ Configuration (n - 1)  as mem inp out
+        0:as -> Left $ Configuration n        as mem inp out
         _:as -> Left $ Configuration (ip + 1) as mem inp out
 
 executeStackOperation :: (Value -> Value -> Value) -> Configuration -> Either Configuration Exception
