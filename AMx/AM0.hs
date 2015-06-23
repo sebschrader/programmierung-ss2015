@@ -76,7 +76,7 @@ showMemory :: Memory -> String
 showMemory mem = "[" ++ (intercalate ", " $ map showMemoryCell $ IntMap.assocs mem) ++ "]"
 
 showMemoryCell :: (Address, Value) -> String
-showMemoryCell (a, v) = show (a + 1) ++ "/" ++ show v
+showMemoryCell (a, v) = show a ++ "/" ++ show v
 
 showSequence :: Show a => [a] -> String
 showSequence [] = "ε"
