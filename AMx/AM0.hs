@@ -70,7 +70,7 @@ data Configuration = Configuration { instructionPointer :: Address
 
 instance Show Configuration where
     show (Configuration ip stack mem inp out)
-        = "(" ++ intercalate ", " [show (ip + 1), showSequence stack, showMemory mem, showSequence inp, showSequence $ reverse out] ++ ")"
+        = "(" ++ intercalate ", " [show ip, showSequence stack, showMemory mem, showSequence inp, showSequence $ reverse out] ++ ")"
 
 showMemory :: Memory -> String
 showMemory mem = "[" ++ (intercalate ", " $ map showMemoryCell $ IntMap.assocs mem) ++ "]"
