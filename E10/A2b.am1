@@ -1,0 +1,18 @@
+INIT 1
+CALL 12
+JMP 0
+INIT 2
+LOADI(-2)
+STORE(lokal,2)
+LOAD(global,1)
+STORE(lokal,1)
+LIT 5
+STORE(global,1)
+RET 1
+INIT 1
+READ(global,1)
+LOADA(global,1)
+PUSH
+CALL 4
+WRITE(global,1)
+RET 0
