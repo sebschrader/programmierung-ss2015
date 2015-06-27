@@ -10,19 +10,19 @@ This is not the official reference solution and may contain errors.
 You need to install haskell.
 Open a terminal and enter:
 
-´´´
+```
 runhaskell AMx/Interpreter.hs [file] [input]
-´´´
+```
 
 For Example 
 
-´´´
+```
 runhaskell AMx/Interpreter.hs E08/A1 
-´´´
+```
 
 should give
 
-´´´
+```
 (1, ε, [], 3, ε)
 (2, ε, [1/3], ε, ε)
 (3, 3, [1/3], ε, ε)
@@ -39,4 +39,4 @@ should give
 (4, 1:1, [1/1], ε, 1)
 (5, 0, [1/1], ε, 1)
 (12, ε, [1/1], ε, 1)
-´´´
+```
