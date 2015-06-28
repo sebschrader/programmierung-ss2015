@@ -1,4 +1,4 @@
-´´´
+```
   trans(Max)
   
 = trans(#include <stdio.h> int main(){... return 0;})
@@ -37,4 +37,4 @@
   LOAD 2;    <- 1.3.1
   STORE 3;
   WRITE 3;   <- 1.3.3
-´´´
+```
