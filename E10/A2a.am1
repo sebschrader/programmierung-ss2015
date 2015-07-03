@@ -1,0 +1,20 @@
+tab_g+1Decl = [a/(var,global,1),b/(var,global,2),h/(proc,1),g/(proc,2),x/(var-ref,-2),y/(var,lokal,1)]
+
+INIT 1
+LOAD(global,2) # 2.1.1
+LIT 1
+NE
+JMC 2.1.2
+LOADI -2
+LIT 1
+SUB
+STORE(global,2)
+LOADA(lokal,1)
+CALL 1
+JMP 2.1.1
+LOAD(lokal,1) # 2.1.2
+PUSH
+LOAD(loakl, -2)
+PUSH
+CALL 3
+RET 1
