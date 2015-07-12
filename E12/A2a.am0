@@ -1,0 +1,27 @@
+READ 1;
+READ 2;
+LOAD 2;
+LIT 3
+LOAD 1;
+STORE 3;
+STORE 2;
+STORE 1;
+JMP test;
+LOAD 1; #:test
+LIT 0;
+EQ;
+JMC  18; #to test.3
+LOAD 1;
+STORE 1;
+WRITE 1;
+JMP 0;
+LOAD 1 #:test.3
+LIT 1;
+SUB;
+LOAD 3;
+LOAD 2;
+LOAD 3;
+MUL;
+LOAD 3;
+ADD;
+JMP 10;#to test
