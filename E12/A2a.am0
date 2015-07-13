@@ -6,16 +6,16 @@ LOAD 1;
 STORE 3;
 STORE 2;
 STORE 1;
-JMP test;
-LOAD 1; #:test
+JMP test; 
+LOAD 1; #:test,test.1
 LIT 0;
 EQ;
-JMC  18; #to test.3
-LOAD 1;
+JMC 18; #to test.3 (write x3)
+LOAD 1; #:test.2
 STORE 1;
 WRITE 1;
 JMP 0;
-LOAD 1 #:test.3
+LOAD 1 #:test.3 (rekursive call of test)
 LIT 1;
 SUB;
 LOAD 3;
@@ -24,4 +24,7 @@ LOAD 3;
 MUL;
 LOAD 3;
 ADD;
+STORE 3;
+STORE 2;
+STORE 1;
 JMP 10;#to test
