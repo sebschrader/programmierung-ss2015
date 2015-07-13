@@ -11,7 +11,7 @@ LOAD 1; #:test,test.1
 LIT 0;
 EQ;
 JMC 18; #to test.3 (write x3)
-LOAD 1; #:test.2
+LOAD 3; #:test.2
 STORE 1;
 WRITE 1;
 JMP 0;
