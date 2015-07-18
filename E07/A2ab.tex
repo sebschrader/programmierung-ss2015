@@ -17,15 +17,15 @@
 \begin{frame}{Aufgabe 02a}
 
   \begin{gather*}
-    (λfx.\underbrace{fx}_{GV = \{f, x\}} )(\underbrace{λzy.xy}_{FV=\{x\}})x \\
+    (λf\underbrace{x.fx}_{GV = \{x\}} )(\underbrace{λzy.xy}_{FV=\{x\}})x \\
     \uncover<2->{
-      \alphaconversion (λfx'. \underbrace{fx'}_{GV=\{f,x'\}})(\underbrace{λzy.xy}_{FV=\{x\}})x \\    
+      \alphaconversion (λf \underbrace{x'.fx'}_{GV=\{x'\}})(\underbrace{λzy.xy}_{FV=\{x\}})x \\
     }
     \uncover<3->{
-      \betareduction (λx'. \underbrace{(λzy.xy)x'}_{GV=\{x'\}}) \underbrace{x}_{FV=\{x\}} \\
+      \betareduction (λx'. \underbrace{(λzy.xy)x'}_{GV=\{y,z\}}) \underbrace{x}_{FV=\{x\}} \\
     }
     \uncover<4->{
-      \betareduction (λzx.\underbrace{xy}_{GV=\{y\}}) \underbrace{x}_{FV=\{x\}} \\
+      \betareduction (λz\underbrace{y.xy}_{GV=\{y\}}) \underbrace{x}_{FV=\{x\}} \\
     }
     \uncover<5->{
       \betareduction (λy.xy)
