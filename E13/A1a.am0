@@ -1,0 +1,19 @@
+LOAD 3; #:h,h.1
+LOAD 1;
+GT;
+JMC 11;# to h.3 
+LOAD 2; #:h.2
+LIT 1;
+SUB;
+STORE 1;
+WRITE 1;
+JMP 0;
+LOAD 2; #:h.3
+LOAD 1;
+LOAD 3;
+SUB;
+LOAD 2;
+STORE 3;
+STORE 2;
+STORE 1;
+JMP 1; # jump to h
