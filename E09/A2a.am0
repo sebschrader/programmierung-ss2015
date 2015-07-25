@@ -3,7 +3,6 @@ STORE 3;
 READ 1;
 LOAD 1;
 LIT 0;
-GT;
 LT;
 JMC 10;
 LIT 0;
@@ -21,4 +20,5 @@ LOAD 1;
 LIT 1;
 SUB;
 STORE 1;
-WRITE 3
+JMP 10;
+WRITE 3;
