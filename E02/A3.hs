@@ -24,5 +24,5 @@ countLeaf (Branch left right) = countLeaf left + countLeaf right
 
 leafsToList :: Tree -> [Int]
 leafsToList (Leaf a)            = [a]
-leafsToList (Branch left right) = leafsToList left ++ (leafsToList right
+leafsToList (Branch left right) = leafsToList left ++ leafsToList right
 
