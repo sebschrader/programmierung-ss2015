@@ -14,7 +14,7 @@ CALL 1
 JMP 2.1.1
 LOAD(lokal,1) # 2.1.2
 PUSH
-LOAD(loakl, -2)
+LOAD(lokal, -2)
 PUSH
 CALL 3
 RET 1
